@@ -24,14 +24,24 @@ y_help_ingredient = 食材類型積分
 y_help_time = 幫忙間隔(/小時)積分
 y_help_max = 持有上限積分
 
+skill_main_level = 主技能提升
 skill_main = 主技能加成項目
-skill_main_num=主技能
+skill_main_num=主技能加成數量
 skill_second = 副技能加成項目積分
+skill_second_num = 副技能加成數量
 skill_speed = 幫忙速度項目積分
+skill_sleep = 夢碎片獲取數量
+skill_up_level = 技能提升積分
 skill_up = 技能機率提升項目積分
-skill_ingredient = 食材機率項目積分
+skill_ingredient_get = 食材獲取項目積分
+skill_ingredient = 食材發現機率項目積分
+S先列1.25
+M先列1.5
+L先列1.75
 skill_max = 持有上限提升項目積分
 skill_exp = exp獲得量項目積分
+skill_strength = 活力回復量項目積分
+skill_help = 幫忙間隔縮短項目積分
 
 
 power_up = 能力增加
@@ -43,59 +53,11 @@ function
 b
 w
 '''
-# 名稱 = 加成*積分
-x_expertise = expertise*x_expertise
-x_level = level*x_level
-x_help_friut = help_friut*x_help_friut*x_help_friut_num
-x_help_ingredient = help_ingredient*x_help_ingredient*x_help_ingredient_num
-x_help_time = help_time*x_help_time
-x_help_max = help_max*x_help_max
 
-y_expertise = expertise*y_expertise
-y_level = level*y_level
-y_help_friut = help_friut*y_help_friut*y_help_friut_num
-y_help_ingredient = help_ingredient*y_help_ingredient*y_help_ingredient_num
-y_help_time = help_time*y_help_time
-y_help_max = help_max*y_help_max
-
-
-
-# sp
-x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
-x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
 
 
 y=b+w
 
 
-{"img_num":1,
-"x_name":"妙蛙種子",
-"x_sp": 388,
-"x_expertise" = "f",
-"x_level":5,
-"x_help_friut" : "金枕果",
-"x_help_friut_num" : 1,
-"x_help_ingredient" : "甜甜蜜",
-"x_help_ingredient_num" : 2,
-"x_help_time" : 12:44,
-"x_help_max" : 11,
-"skill_main":"skill_ingredient",
-"skill_main_num":6,
-"power_up"=null,
-"power_down"=null}
-{"img_num":1,
-"x_name":"妙蛙種子",
-"x_sp": 460,
-"x_expertise" = "f",
-"x_level":10,
-"x_help_friut" : "金枕果",
-"x_help_friut_num" : 1,
-"x_help_ingredient" : "甜甜蜜",
-"x_help_ingredient_num" : 2,
-"x_help_time" : 6:58,
-"x_help_max" : 11,
-"skill_main":"skill_ingredient",
-"skill_main_num":6,
-"power_up"="skill_main",
-"power_down"="skill_exp"}
+
 
