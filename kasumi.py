@@ -30,3 +30,61 @@ x_power_down=power_down*x_power_down
 # sp
 x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
 x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
+
+import sqlite3
+import json
+import tkinter as tk
+from tkinter import messagebox
+
+def create_table(con: sqlite3.Connection):
+    # Your create_table function code here
+
+def insert_data(con: sqlite3.Connection, values: list[dict]):
+    # Your insert_data function code here
+
+def save_data():
+    # Get data from the input fields
+    data = {
+        "id": id_entry.get(),
+        "img_num": img_num_entry.get(),
+        "001_name": name_entry.get(),
+        # Add the rest of the fields here
+    }
+
+    # Insert the data into the database
+    insert_data(con, [data])
+
+    # Show a success message
+    messagebox.showinfo("Success", "Data added to the database!")
+
+# Initialize the Tkinter window
+root = tk.Tk()
+root.title("Add New Table Entry")
+
+# Create and place labels and entry fields for each column
+label1 = tk.Label(root, text="ID")
+label1.grid(row=0, column=0)
+id_entry = tk.Entry(root)
+id_entry.grid(row=0, column=1)
+
+label2 = tk.Label(root, text="Image Number")
+label2.grid(row=1, column=0)
+img_num_entry = tk.Entry(root)
+img_num_entry.grid(row=1, column=1)
+
+label3 = tk.Label(root, text="Name")
+label3.grid(row=2, column=0)
+name_entry = tk.Entry(root)
+name_entry.grid(row=2, column=1)
+
+# Add labels and entry fields for the remaining columns as needed
+
+# Create a button to save the data
+save_button = tk.Button(root, text="Save", command=save_data)
+save_button.grid(row=3, column=0, columnspan=2)
+
+# Initialize the SQLite database connection
+con = sqlite3.connect("data.db")
+
+# Start the Tkinter main loop
+root.mainloop()
