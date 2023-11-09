@@ -1,80 +1,41 @@
 import sqlite3
 import json
+import tkinter as tk
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
-#創sql table
-def create_table(con: sqlite3.Connection):
-    cursor = con.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS 001 (
-            "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-            "img_num" INTEGER,
-            "001_name" TEXT,
-            "001_sp" INTEGER,
-            "001_expertise" TEXT,
-            "001_level" INTEGER,
-            "001_help_fruit" TEXT,
-            "001_help_fruit_num" INTEGER,
-            "001_help_ingredient_1" TEXT,
-            "001_help_ingredient_num_1" INTEGER,
-            "001_help_ingredient_2" TEXT,
-            "001_help_ingredient_num_2" INTEGER,
-            "001_help_ingredient_3" TEXT,
-            "001_help_ingredient_num_3" INTEGER,
-            "001_help_time" TEXT,
-            "001_help_max" INTEGER,
-            "001_skill_main" TEXT,
-            "001_skill_main_num" REAL,
-            "001_skill_main_level" INTEGER,
-            "001_skill_second_1" TEXT,
-            "001_skill_second_num_1" REAL,
-            "001_skill_second_2" TEXT,
-            "001_skill_second_num_2" REAL,
-            "001_skill_second_3" TEXT,
-            "001_skill_second_num_3" REAL,
-            "001_skill_second_4" TEXT,
-            "001_skill_second_num_4" REAL,
-            "001_skill_second_5" TEXT,
-            "001_skill_second_num_5" REAL,
-            "001_power_up" TEXT,
-            "001_power_down" TEXT
-        );
-    ''')
-    con.commit()
+# 介面
+class Window(tk.Tk):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        # 標題
+        topFrame=tk.Frame(self,relief=tk.GROOVE)
+        tk.Label(topFrame,text="Pokemon Sleep SQL",font=("arial",20,"bold")).pack(padx=20,pady=20,side=LEFT)
+        topFrame.pack()
+        
+        # 新增按鈕
+        self.b=ttk.Button(self,text="新增",bootstyle=DANGER)
+        self.b.pack(side=LEFT,padx=5,pady=10)
 
-# 引入資料
-def insert_data(con: sqlite3.Connection, values: list[dict]):
-    cursor = con.cursor()
-    sql = '''
-    REPLACE INTO 001(
-        編號, 
-        名稱, 
-        sp值, 
-        專長積分, 
-        等級, 
-        樹果, 
-        樹果加成,
-        食材1,食材1加成,
-        食材2,食材2加成,
-        食材3,食材3加成,
-        幫忙間隔(小時),
-        持有上限,
-        主技能,主技能比例or數量,主技能等級,
-        副技能1,副技能1比例or數量,
-        副技能2,副技能2比例or數量,
-        副技能3,副技能3比例or數量,
-        副技能4,副技能4比例or數量,
-        副技能5,副技能5比例or數量,
-        能力增加,
-        能力縮減)
-    values(?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,)
-    '''
-    cursor.execute(sql, values)
-    con.commit()
+        # 搜尋
+        self.tree_box = ttk.LabelFrame(text="搜尋",bootstyle=DANGER)
+        # 名字
+        tk.Label(self.tree_box, text="名字：").pack(side=LEFT)
+        search_entry = tk.Entry(self.tree_box)
+        search_entry.bind("<KeyRelease>")#,self.OnEntryClick)
+        search_entry.pack(side="left")
+        self.tree_box.pack(fill="x",padx=10)
+        self.menub1=ttk.Menubutton(text="樹果類型",bootstyle=DANGER)
+        self.menub1.pack(padx=10)
 
-con = sqlite3.connect("data.db")
 
-with open("data.json", encoding='utf-8') as file:
-    data = json.load(file)
 
-create_table(con)
-con.close()
+
+def main():
+    window=Window()
+    window.title("Pokemon Sleep SQL")
+    window.resizable(width=False,height=False)
+    window.mainloop()
+
+if __name__ == "__main__":
+    main()
