@@ -31,138 +31,64 @@ x_power_down=power_down*x_power_down
 x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
 x_sp =x_expertise+x_level+x_help_friut+x_help_ingredient+x_help_time+x_help_max
 
-import sqlite3
-import json
-import tkinter as tk
-from tkinter import messagebox
 
-def create_table(con: sqlite3.Connection):
-    # Your create_table function code here
 
-def insert_data(con: sqlite3.Connection, values: list[dict]):
-    # Your insert_data function code here
+# 資料庫
+class SQL():  
+    #創sql table
+    def create_table(con: sqlite3.Connection):
+        cursor = con.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS 001 (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "img_num" INTEGER,
+                "name" TEXT,
+                "sp" INTEGER,
+                "expertise" TEXT,
+                "level" INTEGER,
+                "help_fruit" TEXT,
+                "help_fruit_num" INTEGER,
+                "help_ingredient_1" TEXT,
+                "help_ingredient_num_1" INTEGER,
+                "help_ingredient_2" TEXT,
+                "help_ingredient_num_2" INTEGER,
+                "help_ingredient_3" TEXT,
+                "help_ingredient_num_3" INTEGER,
+                "help_time" TEXT,
+                "help_max" INTEGER,
+                "skill_main" TEXT,
+                "skill_main_num" REAL,
+                "skill_main_level" INTEGER,
+                "skill_second_1" TEXT,
+                "skill_second_num_1" REAL,
+                "skill_second_2" TEXT,
+                "skill_second_num_2" REAL,
+                "skill_second_3" TEXT,
+                "skill_second_num_3" REAL,
+                "skill_second_4" TEXT,
+                "skill_second_num_4" REAL,
+                "skill_second_5" TEXT,
+                "skill_second_num_5" REAL,
+                "power_up" TEXT,
+                "power_down" TEXT
+            );
+        ''')
+        con.commit()
 
-def save_data():
-    # Get data from the input fields
-    data = {
-        "id": id_entry.get(),
-        "img_num": img_num_entry.get(),
-        "001_name": name_entry.get(),
-        # Add the rest of the fields here
-    }
+    # 引入資料
+    def insert_data(con: sqlite3.Connection, values: list[dict]):
+        cursor = con.cursor()
+        tablename="001(編號, 名稱, sp值, 專長積分, 等級, 樹果, 樹果加成,食材1,食材1加成,食材2,食材2加成,食材3,食材3加成,幫忙間隔(小時),持有上限,主技能,主技能比例or數量,主技能等級,副技能1,副技能1比例or數量,副技能2,副技能2比例or數量,副技能3,副技能3比例or數量,副技能4,副技能4比例or數量,副技能5,副技能5比例or數量,能力增加,能力縮減)"
+    #還沒改完(1108的main.ipynb)
+        values(?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,)
+        
+        cursor.execute(sql, values)
+        con.commit()
 
-    # Insert the data into the database
-    insert_data(con, [data])
+    con = sqlite3.connect("data.db")
 
-    # Show a success message
-    messagebox.showinfo("Success", "Data added to the database!")
+    with open("data.json", encoding='utf-8') as file:
+        data = json.load(file)
 
-# Initialize the Tkinter window
-root = tk.Tk()
-root.title("Add New Table Entry")
-
-# Create and place labels and entry fields for each column
-label1 = tk.Label(root, text="ID")
-label1.grid(row=0, column=0)
-id_entry = tk.Entry(root)
-id_entry.grid(row=0, column=1)
-
-label2 = tk.Label(root, text="Image Number")
-label2.grid(row=1, column=0)
-img_num_entry = tk.Entry(root)
-img_num_entry.grid(row=1, column=1)
-
-label3 = tk.Label(root, text="Name")
-label3.grid(row=2, column=0)
-name_entry = tk.Entry(root)
-name_entry.grid(row=2, column=1)
-
-# Add labels and entry fields for the remaining columns as needed
-
-# Create a button to save the data
-save_button = tk.Button(root, text="Save", command=save_data)
-save_button.grid(row=3, column=0, columnspan=2)
-
-# Initialize the SQLite database connection
-con = sqlite3.connect("data.db")
-
-# Start the Tkinter main loop
-root.mainloop()
-
-#創sql table
-def create_table(con: sqlite3.Connection):
-    cursor = con.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS 001 (
-            "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-            "img_num" INTEGER,
-            "001_name" TEXT,
-            "001_sp" INTEGER,
-            "001_expertise" TEXT,
-            "001_level" INTEGER,
-            "001_help_fruit" TEXT,
-            "001_help_fruit_num" INTEGER,
-            "001_help_ingredient_1" TEXT,
-            "001_help_ingredient_num_1" INTEGER,
-            "001_help_ingredient_2" TEXT,
-            "001_help_ingredient_num_2" INTEGER,
-            "001_help_ingredient_3" TEXT,
-            "001_help_ingredient_num_3" INTEGER,
-            "001_help_time" TEXT,
-            "001_help_max" INTEGER,
-            "001_skill_main" TEXT,
-            "001_skill_main_num" REAL,
-            "001_skill_main_level" INTEGER,
-            "001_skill_second_1" TEXT,
-            "001_skill_second_num_1" REAL,
-            "001_skill_second_2" TEXT,
-            "001_skill_second_num_2" REAL,
-            "001_skill_second_3" TEXT,
-            "001_skill_second_num_3" REAL,
-            "001_skill_second_4" TEXT,
-            "001_skill_second_num_4" REAL,
-            "001_skill_second_5" TEXT,
-            "001_skill_second_num_5" REAL,
-            "001_power_up" TEXT,
-            "001_power_down" TEXT
-        );
-    ''')
-    con.commit()
-
-# 引入資料
-def insert_data(con: sqlite3.Connection, values: list[dict]):
-    cursor = con.cursor()
-    sql = '''
-    REPLACE INTO 001(
-        編號, 
-        名稱, 
-        sp值, 
-        專長積分, 
-        等級, 
-        樹果, 
-        樹果加成,
-        食材1,食材1加成,
-        食材2,食材2加成,
-        食材3,食材3加成,
-        幫忙間隔(小時),
-        持有上限,
-        主技能,主技能比例or數量,主技能等級,
-        副技能1,副技能1比例or數量,
-        副技能2,副技能2比例or數量,
-        副技能3,副技能3比例or數量,
-        副技能4,副技能4比例or數量,
-        副技能5,副技能5比例or數量,
-        能力增加,
-        能力縮減)
-    values(?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,?, ?, ?, ?, ?, ?, ?,?,?,?,)
-    '''
-    cursor.execute(sql, values)
-    con.commit()
-
-con = sqlite3.connect("data.db")
-
-with open("data.json", encoding='utf-8') as file:
-    data = json.load(file)
-
-create_table(con)
-con.close()
+    create_table(con)
+    con.close()
