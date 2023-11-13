@@ -20,8 +20,8 @@ class Window(tk.Tk):
         self.search_box = ttk.LabelFrame(text="搜尋",bootstyle=DANGER)
         self.search_box.pack(fill="x",padx=(0,10),pady=10)
         # 名字
-        tk.Label(self.search_box, text="名字：").pack(side=LEFT)
-        self.search_name= tk.Entry(self.search_box,highlightbackground="pink",highlightcolor="pink")
+        tk.Label(self.search_box, text="名稱：").pack(side=LEFT)
+        self.search_name= ttk.Entry(self.search_box,bootstyle=DANGER)
         self.search_name.bind("<KeyRelease>",self.get_search_name)
         self.search_name.pack(side="left",pady=10)
         # 食材
@@ -90,18 +90,31 @@ class NewPokemon(tk.Toplevel):
         topFrame=tk.Frame(self,relief=tk.GROOVE)
         tk.Label(topFrame,text="新增神奇寶貝",font=("arial",20,"bold")).pack(padx=20,pady=(20,0),side=LEFT)
         topFrame.pack()
-        # 名稱---------------------------------------
-        self.search_box = ttk.LabelFrame(text="名稱",bootstyle=DANGER)
-        self.search_box.pack(fill="x",padx=(0,10),pady=10)
-        # 名字
-        tk.Label(self.search_box, text="名字：").pack(side=LEFT)
-        self.search_name= tk.Entry(self.search_box,highlightbackground="pink",highlightcolor="pink")
-        self.search_name.bind("<KeyRelease>",self.get_search_name)
+        # 基本資料---------------------------------------
+        search_box = ttk.LabelFrame(self,text="基本資料",bootstyle=WARNING)
+        search_box.pack(fill="x",padx=(10,10),pady=10)
+        # 編號
+        tk.Label(search_box, text="編號：").pack(side=LEFT)
+        self.search_name= ttk.Entry(search_box,bootstyle=WARNING)
+        self.search_name.bind("<KeyRelease>")
         self.search_name.pack(side="left",pady=10)
-         # 食材
+        # 名字
+        tk.Label(search_box, text="名稱：").pack(side=LEFT)
+        self.search_name= ttk.Entry(search_box,bootstyle=WARNING)
+        self.search_name.bind("<KeyRelease>",Window.get_search_name)
+        self.search_name.pack(side="left",pady=10)
+        # 等級
+        tk.Label(search_box, text="等級：").pack(side=LEFT)
+        self.search_name= ttk.Entry(search_box,bootstyle=WARNING)
+        self.search_name.bind("<KeyRelease>")
+        self.search_name.pack(side="left",pady=10)
+        # 幫忙能力---------------------------------------
+        help_box = ttk.LabelFrame(self,text="幫忙能力",bootstyle=WARNING)
+        help_box.pack(fill="x",padx=(10,10),pady=10)
+        # 食材
         i = tk.StringVar()
         i.set("食材類型")
-        ingredient_type = ttk.Menubutton(self.search_box,bootstyle=(OUTLINE,DANGER))
+        ingredient_type = ttk.Menubutton(help_box,bootstyle=(OUTLINE,WARNING))
         ingredient_type["textvariable"] = i
         ingredient_type_values = ('01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
                                   '06 火辣香草','07 豆製肉','08 哞哞鮮奶','09 甜甜蜜','10 純粹油',
@@ -111,14 +124,14 @@ class NewPokemon(tk.Toplevel):
             ingredient_type_menu.add_command(
                 label=ingredient, 
                 command=lambda val=ingredient: i.set(val),
-                activebackground="pink"
+                activebackground="#CDAF95"
             )
         ingredient_type["menu"] = ingredient_type_menu
         ingredient_type.pack(padx=10,pady=10, side=tk.RIGHT)
         # 樹果類型
         f = tk.StringVar()
         f.set("樹果類型")
-        fruit_type = ttk.Menubutton(self.search_box,bootstyle=DANGER)
+        fruit_type = ttk.Menubutton(help_box,bootstyle=WARNING)
         fruit_type["textvariable"] = f
         fruit_type_values = ('01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
                              '06 莓莓果','07 櫻子果','08 零餘果','09 勿花果','10 椰木果',
@@ -129,11 +142,77 @@ class NewPokemon(tk.Toplevel):
             fruit_type_menu.add_command(
                 label=fruit, 
                 command=lambda val=fruit: f.set(val),
-                activebackground="pink"
+                activebackground="#CDAF95"
             )
         fruit_type["menu"] = fruit_type_menu
         fruit_type.pack(padx=10,pady=10, side=tk.RIGHT)
+        # 幫忙間隔
+        tk.Label(help_box, text="幫忙間隔：").pack(side=LEFT)
+        self.help_name= ttk.Entry(help_box,bootstyle=WARNING)
+        self.help_name.bind("<KeyRelease>")
+        self.help_name.pack(side="left",pady=10)
+        # 持有上限
+        tk.Label(help_box, text="持有上限：").pack(side=LEFT)
+        self.help_name= ttk.Entry(help_box,bootstyle=WARNING)
+        self.help_name.bind("<KeyRelease>")
+        self.help_name.pack(side="left",pady=10)
+        # 主技能---------------------------------------
+        skill_main_box = ttk.LabelFrame(self,text="主技能",bootstyle=WARNING)
+        skill_main_box.pack(fill="x",padx=(10,10),pady=10)
+        sm = tk.StringVar()
+        skill_main = ttk.Radiobutton(skill_main_box,bootstyle=WARNING)
+        skill_main["textvariable"] = sm
+        tk.Label(skill_main_box, text="個體加成：").pack(side=LEFT)
+        skill_main_values = ('01 持有上限', '02 幫忙速度','03 食物機率提升','04 技能機率提升','05 技能等級提升',
+                             '06 樹果數量','07 櫻子果','08 零餘果','09 勿花果','10 椰木果',
+                             '11 芒芒果','12 木子果','13 文柚果','14 墨莓果','15 番荔果',
+                             '16 異奇果','17 靛莓果','18 桃桃果')
+        skill_main_menu = tk.Menu(skill_main, tearoff=0)
+        for skill in skill_main_values:
+            skill_main_menu.add_command(
+                label=skill, 
+                command=lambda val=skill: sm.set(val)
+            )
+        skill_main["menu"] = skill_main_menu
+        skill_main.pack(padx=10,pady=10, side=tk.RIGHT)
 
+        # 儲存按鈕---------------------------------------
+        save_button = ttk.Button(self, text="儲存", command=self.save_to_database,bootstyle=WARNING)
+        save_button.pack(pady=10)
+
+    def save_to_database(self):
+        # Connect to the SQLite database (create one if it doesn't exist)
+        conn = sqlite3.connect("pokemon_database.db")
+        cursor = conn.cursor()
+
+        # Create a table if it doesn't exist
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS pokemon (
+                name TEXT,
+                ingredient_type TEXT,
+                fruit_type TEXT,
+                help_interval INTEGER
+            )
+        ''')
+
+        # Get data from the entries
+        name = self.search_name.get()
+        ingredient_type = self.ingredient_type_var.get()
+        fruit_type = self.fruit_type_var.get()
+        help_interval = int(self.help_name.get()) if self.help_name.get().isdigit() else 0
+
+        # Insert data into the database
+        cursor.execute('''
+            INSERT INTO pokemon (name, ingredient_type, fruit_type, help_interval)
+            VALUES (?, ?, ?, ?)
+        ''', (name, ingredient_type, fruit_type, help_interval))
+
+        # Commit changes and close the connection
+        conn.commit()
+        conn.close()
+
+        # Optionally, you can show a message or perform other actions after saving to the database
+        print("Data saved to the database!")
 
 if __name__ == "__main__":
     window=Window()
