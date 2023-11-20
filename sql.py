@@ -4,6 +4,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from tkinter.simpledialog import Dialog
 
+
 # 主介面
 class Window(tk.Tk):
     def __init__(self,**kwargs):
@@ -16,11 +17,11 @@ class Window(tk.Tk):
 
         # 新增按鈕-------------------------------------------
         self.b=ttk.Button(self,text="新增神奇寶貝",bootstyle=WARNING,command=self.open_NewPokemon)
-        self.b.pack(side=LEFT,padx=10,pady=(0,10))
+        self.b.place(x=10,y=90)
 
         # 搜尋-----------------------------------------------
         self.search_box = ttk.LabelFrame(text="搜尋",bootstyle=DANGER)
-        self.search_box.pack(fill="x",padx=(0,10),pady=10)
+        self.search_box.pack(fill="x",padx=(120,10),pady=10)
 
         # 名字
         tk.Label(self.search_box, text="名稱：").pack(side=LEFT)
@@ -66,27 +67,25 @@ class Window(tk.Tk):
         fruit_type.pack(padx=10,pady=10, side=tk.RIGHT)
 
         #tree view-----------------------------------------------------
-        self.tree_box = ttk.LabelFrame(text="神奇寶貝資料庫",bootstyle=PRIMARY)
-        self.tree_box.pack(fill="x",padx=(0,10),pady=10,side=LEFT)
-
         treeview=tk.Frame(self)
         self.pokemon_data=PokemonTreeView(treeview,show="headings",
         columns=('name','level','sp'),height=20)
-        self.pokemon_data.pack(side=LEFT)
+        self.pokemon_data.pack(side=LEFT,padx=10,pady=10)
         # 捲動軸
         scroll=ttk.Scrollbar(treeview,orient="vertical",command=self.pokemon_data.yview,bootstyle=PRIMARY)
         scroll.pack(side=LEFT,fill="y")
         self.pokemon_data.configure(yscrollcommand=scroll.set)
-        treeview.pack(pady=(0,30),padx=20)
+        treeview.pack(pady=(0,30),padx=20,expand=True,fill="x")
         #圓圈圈-----------------------------------------------------
-        meter=ttk.Meter(metersize=180,
+        meter=ttk.Meter(
+            metersize=180,
             padding=5,
             amountused=25,
             metertype="semi",
             subtext="miles per hour",
             interactive=True,
         )
-        meter.pack()
+        meter.place(x=365,y=220)
 
     # 把search_name引入treeview
     def get_search_name(self):
@@ -613,16 +612,18 @@ class PokemonTreeView(ttk.Treeview):
         data_dict=self.item(select)
         data_list=data_dict['values']
         title=data_list[1]
-        treeview=TreeView(self.parent,data=data_list,title=title)
+        treeview=TreeView(self.parent,data=data_list,title=title,meter=self.meter)
+        treeview.update_meter()
 
 # Tree view介面
-class TreeView(Dialog):
-    def __init__(self, parent,data,meter,**kwargs):
+class TreeView(tk.Toplevel):
+    def __init__(self, parent,data,title,meter,**kwargs):
         self.name=data[2]
         self.level=data[5]
         self.sp=data[3]
         self.meter=meter
         super().__init__(parent,**kwargs)
+        self.body()
     
     def body(self,master):
         main_frame=tk.Frame(master)
@@ -643,8 +644,8 @@ class TreeView(Dialog):
         tk.Entry(main_frame,textvariable=sp_var,state="disabled").grid(column=1,row=2)
     
     def update_meter(self,*_):
-        new=self.meter.get("amountused")
-        self.so=new
+        new=int(self.sp)
+        self.meter.set(amountused=new)
 
 if __name__ == "__main__":
     window=Window()
