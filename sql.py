@@ -3,6 +3,7 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from tkinter.simpledialog import Dialog
+import pandas
 
 
 # 主介面
@@ -67,15 +68,15 @@ class Window(tk.Tk):
         fruit_type.pack(padx=10,pady=10, side=tk.RIGHT)
 
         #tree view-----------------------------------------------------
-        treeview=tk.Frame(self)
-        self.pokemon_data=PokemonTreeView(treeview,show="headings",
+        self.treeview=tk.Frame(self)
+        self.pokemon_data=PokemonTreeView(self.treeview,show="headings",
         columns=('name','level','sp'),height=20)
         self.pokemon_data.pack(side=LEFT,padx=10,pady=10)
         # 捲動軸
-        scroll=ttk.Scrollbar(treeview,orient="vertical",command=self.pokemon_data.yview,bootstyle=PRIMARY)
+        scroll=ttk.Scrollbar(self.treeview,orient="vertical",command=self.pokemon_data.yview,bootstyle=PRIMARY)
         scroll.pack(side=LEFT,fill="y")
         self.pokemon_data.configure(yscrollcommand=scroll.set)
-        treeview.pack(pady=(0,30),padx=20,expand=True,fill="x")
+        self.treeview.pack(pady=(0,30),padx=20,expand=True,fill="x")
         #圓圈圈-----------------------------------------------------
         meter=ttk.Meter(
             metersize=180,
@@ -88,9 +89,18 @@ class Window(tk.Tk):
         meter.place(x=365,y=220)
 
     # 把search_name引入treeview
-    def get_search_name(self):
-        text=self.search_name.get()
-        self.tree_box.config(text=text)
+    def get_search_name(self, event=None):
+        text = self.search_name.get().lower()
+        children = self.pokemon_data.get_children()
+        ingredient = NewPokemon.help_fruit.get()
+        for child in children:
+            item = self.pokemon_data.item(child)
+            name = item['values'][0].lower()
+            ingredient_type = item['values'][6].lower() if len(item['values']) > 1 else ""
+
+            if text.lower() not in name or (ingredient != "食材類型" and ingredient not in ingredient_type):
+                self.pokemon_data.delete(child)
+
 
     # 打開NewPokemon視窗
     def open_NewPokemon(self):
@@ -99,11 +109,11 @@ class Window(tk.Tk):
         open_window.resizable(width=False,height=False)
         open_window.mainloop()
 
-# 會蹦出很多莫名其妙的資料
 # 新增神奇寶貝介面
 class NewPokemon(tk.Toplevel):
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
+    def __init__(self,event=None,**kwargs):
+        super().__init__(event,**kwargs)
+        self.pokemon_data={}
 
         # 標題----------------------------------------------
         topFrame=tk.Frame(self,relief=tk.GROOVE)
@@ -117,19 +127,16 @@ class NewPokemon(tk.Toplevel):
         # 編號
         tk.Label(search_box, text="編號：").pack(side=tk.LEFT)
         self.img_num= ttk.Entry(search_box,bootstyle=WARNING,width=5)
-        self.img_num.bind("<KeyRelease>",self.save_to_database)
         self.img_num.pack(side="left",pady=10)
 
         # 名字
         tk.Label(search_box, text="名稱：").pack(side=LEFT)
         self.name= ttk.Entry(search_box,bootstyle=WARNING)
-        self.name.bind("<KeyRelease>",self.save_to_database)
         self.name.pack(side="left",pady=10)
 
         # sp
         tk.Label(search_box, text="SP值").pack(side=LEFT)
         self.sp= ttk.Entry(search_box,bootstyle=WARNING,width=5)
-        self.sp.bind("<KeyRelease>",self.save_to_database)
         self.sp.pack(side="left",pady=10)
 
         # 專長
@@ -151,20 +158,17 @@ class NewPokemon(tk.Toplevel):
         # 等級
         tk.Label(search_box, text="等級：").pack(side=LEFT)
         self.level= ttk.Entry(search_box,bootstyle=WARNING,width=5)
-        self.level.bind("<KeyRelease>",self.save_to_database)
         self.level.pack(side="left",pady=10)
 
         
         # 幫忙間隔
         tk.Label(search_box, text="幫忙間隔：").pack(side="left",padx=(50,0),pady=10)
         self.help_time = ttk.Entry(search_box, style="WARNING", width=10)
-        self.help_time.bind("<KeyRelease>",self.save_to_database)
         self.help_time.pack(side="left",pady=10)
 
         # 持有上限
         tk.Label(search_box, text="持有上限：").pack(side="left",pady=10)
         self.help_max = ttk.Entry(search_box, style="WARNING", width=10)
-        self.help_max.bind("<KeyRelease>",self.save_to_database)
         self.help_max.pack(side="left",pady=10)
 
         # 幫忙能力---------------------------------------
@@ -193,7 +197,6 @@ class NewPokemon(tk.Toplevel):
         # 樹果加成
         tk.Label(help_box, text="樹果加成：").pack(side=LEFT)
         self.help_fruit_num= ttk.Entry(help_box,bootstyle=WARNING,width=5)
-        self.help_fruit_num.bind("<KeyRelease>",self.save_to_database)
         self.help_fruit_num.pack(side="left",pady=10)
 
         # 食材1
@@ -217,7 +220,6 @@ class NewPokemon(tk.Toplevel):
         # 食材加成1
         tk.Label(help_box, text="加成1：").pack(side=LEFT)
         self.help_ingredient_num_1= ttk.Entry(help_box,bootstyle=WARNING,width=5)
-        self.help_ingredient_num_1.bind("<KeyRelease>",self.save_to_database)
         self.help_ingredient_num_1.pack(side="left",pady=10)
 
         # 食材2
@@ -241,7 +243,6 @@ class NewPokemon(tk.Toplevel):
         # 食材加成2
         tk.Label(help_box, text="加成2：").pack(side=LEFT)
         self.help_ingredient_num_2= ttk.Entry(help_box,bootstyle=WARNING,width=5)
-        self.help_ingredient_num_2.bind("<KeyRelease>",self.save_to_database)
         self.help_ingredient_num_2.pack(side="left",pady=10)
 
         # 食材3
@@ -265,7 +266,6 @@ class NewPokemon(tk.Toplevel):
         # 食材加成3
         tk.Label(help_box, text="加成3：").pack(side=LEFT)
         self.help_ingredient_num_3= ttk.Entry(help_box,bootstyle=WARNING,width=5)
-        self.help_ingredient_num_3.bind("<KeyRelease>",self.save_to_database)
         self.help_ingredient_num_3.pack(side="left",padx=(0,10),pady=10)
 
         # 主技能 ---------------------------------------
@@ -290,7 +290,6 @@ class NewPokemon(tk.Toplevel):
 
         # 主技能加成
         self.skill_main_num= ttk.Entry(skill_main_box,bootstyle=WARNING,width=5)
-        self.skill_main_num.bind("<KeyRelease>",self.save_to_database)
         self.skill_main_num.pack(side="left",pady=10)
 
         # 等級
@@ -304,7 +303,7 @@ class NewPokemon(tk.Toplevel):
         self.power_up.set("能力提升")
         power_up = ttk.Menubutton(skill_main_box,bootstyle=(OUTLINE,WARNING))
         power_up["textvariable"] = self.power_up
-        power_up_values = ("無",'幫忙速度','活力回復量','EXP獲得量','食材發現率','主計能發動機率')
+        power_up_values = ("無",'幫忙速度','活力回復量','EXP獲得量','食材發現率','主技能發動機率')
         power_up_menu = tk.Menu(power_up, tearoff=0)
         for ingredient in power_up_values:
             power_up_menu.add_command(
@@ -320,7 +319,7 @@ class NewPokemon(tk.Toplevel):
         self.power_down.set("能力下降")
         power_down = ttk.Menubutton(skill_main_box,bootstyle=(OUTLINE,WARNING))
         power_down["textvariable"] = self.power_down
-        power_down_values = ("無",'幫忙速度','活力回復量','EXP獲得量','食材發現率','主計能發動機率')
+        power_down_values = ("無",'幫忙速度','活力回復量','EXP獲得量','食材發現率','主技能發動機率')
         power_down_menu = tk.Menu(power_down, tearoff=0)
         for ingredient in power_down_values:
             power_down_menu.add_command(
@@ -352,7 +351,6 @@ class NewPokemon(tk.Toplevel):
         skill_second_1["menu"] = skill_second_1_menu
         skill_second_1.pack(padx=10,pady=10, side=tk.LEFT)
         self.skill_second_num_1= ttk.Entry(skill_second_box,bootstyle=WARNING,width=5)
-        self.skill_second_num_1.bind("<KeyRelease>",self.save_to_database)
         self.skill_second_num_1.pack(side="left",pady=10)
 
         # 副技能2
@@ -372,7 +370,6 @@ class NewPokemon(tk.Toplevel):
         skill_second_2["menu"] = skill_second_2_menu
         skill_second_2.pack(padx=10,pady=10, side=tk.LEFT)
         self.skill_second_num_2= ttk.Entry(skill_second_box,bootstyle=WARNING,width=5)
-        self.skill_second_num_2.bind("<KeyRelease>",self.save_to_database)
         self.skill_second_num_2.pack(side="left",pady=10)
 
         # 副技能3
@@ -392,7 +389,6 @@ class NewPokemon(tk.Toplevel):
         skill_second_3["menu"] = skill_second_3_menu
         skill_second_3.pack(padx=10,pady=10, side=tk.LEFT)
         self.skill_second_num_3= ttk.Entry(skill_second_box,bootstyle=WARNING,width=5)
-        self.skill_second_num_3.bind("<KeyRelease>",self.save_to_database)
         self.skill_second_num_3.pack(side="left",pady=10)
 
         # 副技能4
@@ -412,7 +408,6 @@ class NewPokemon(tk.Toplevel):
         skill_second_4["menu"] = skill_second_4_menu
         skill_second_4.pack(padx=10,pady=10, side=tk.LEFT)
         self.skill_second_num_4= ttk.Entry(skill_second_box,bootstyle=WARNING,width=5)
-        self.skill_second_num_4.bind("<KeyRelease>",self.save_to_database)
         self.skill_second_num_4.pack(side="left",pady=10)
 
         # 副技能5
@@ -432,7 +427,6 @@ class NewPokemon(tk.Toplevel):
         skill_second_5["menu"] = skill_second_5_menu
         skill_second_5.pack(padx=10,pady=10, side=tk.LEFT)
         self.skill_second_num_5= ttk.Entry(skill_second_box,bootstyle=WARNING,width=5)
-        self.skill_second_num_5.bind("<KeyRelease>",self.save_to_database)
         self.skill_second_num_5.pack(side="left",pady=10)
     
         # 儲存按鈕---------------------------------------
@@ -441,6 +435,7 @@ class NewPokemon(tk.Toplevel):
 
     # 創造 & 寫入資料庫
     def save_to_database(self,event=None):
+
         conn = sqlite3.connect("pokemon_database.db")
         cursor = conn.cursor()
 
@@ -582,10 +577,10 @@ class NewPokemon(tk.Toplevel):
 
         conn.commit()
         conn.close()
+        self.destroy()
 
-# 沒有內容超好笑
 class PokemonTreeView(ttk.Treeview):
-    def __init__(self, parent,**kwargs):
+    def __init__(self,parent,**kwargs):
         super().__init__(parent,**kwargs)
         self.parent=parent
         # 欄位名稱
@@ -597,55 +592,31 @@ class PokemonTreeView(ttk.Treeview):
         self.column('level',width=100)
         self.column('sp',width=100)
 
-        self.bind('<ButtonRelease-1>',self.selectItem)
+        self.load_data()
     
-    def update_content(self,site_datas):
-        # 清除舊資料
-        for i in self.get_children():
-            self.delete(i)
-        for index,site in enumerate(site_datas):
-            self.insert('','end',text=f'abc{index}',values=site)
+    def load_data(self):
+        conn=sqlite3.connect("pokemon_database.db")
+        cursor=conn.cursor()
+        cursor.execute('''
+                        SELECT name,level,sp
+                       FROM pokemon
+                       ''')
+        rows=cursor.fetchall()
 
-    def selectItem(self,event):
-        select=self.focus()
-        print(select)
-        data_dict=self.item(select)
-        data_list=data_dict['values']
-        title=data_list[1]
-        treeview=TreeView(self.parent,data=data_list,title=title,meter=self.meter)
-        treeview.update_meter()
+        for item in self.get_children():
+            self.delete(item)
 
-# Tree view介面
-class TreeView(tk.Toplevel):
-    def __init__(self, parent,data,title,meter,**kwargs):
-        self.name=data[2]
-        self.level=data[5]
-        self.sp=data[3]
-        self.meter=meter
-        super().__init__(parent,**kwargs)
-        self.body()
-    
-    def body(self,master):
-        main_frame=tk.Frame(master)
-        main_frame.pack(padx=100,pady=100)
-        tk.Label(main_frame,text="名稱").grid(column=0,row=0)
-        tk.Label(main_frame,text="等級").grid(column=0,row=1)
-        tk.Label(main_frame,text="SP值").grid(column=0,row=2)
-        name_var=tk.StringVar()
-        name_var.set(self.name)
-        tk.Entry(main_frame,textvariable=name_var,state="disabled").grid(column=1,row=0)
+        for row in rows:
+            self.insert('',"end",values=row)
 
-        level_var=tk.StringVar()
-        level_var.set(self.level)
-        tk.Entry(main_frame,textvariable=level_var,state="disabled").grid(column=1,row=1)
-
-        sp_var=tk.StringVar()
-        sp_var.set(self.sp)
-        tk.Entry(main_frame,textvariable=sp_var,state="disabled").grid(column=1,row=2)
-    
-    def update_meter(self,*_):
-        new=int(self.sp)
-        self.meter.set(amountused=new)
+    def search_by_name(self, name):
+        matching_items = []
+        items = self.get_children()
+        for item in items:
+            values = self.item(item, 'values')
+            if values[2] == name:
+                matching_items.append(values)
+        return matching_items
 
 if __name__ == "__main__":
     window=Window()
