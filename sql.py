@@ -2,9 +2,6 @@ import sqlite3
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from tkinter.simpledialog import Dialog
-import pandas
-
 
 # 主介面
 class Window(tk.Tk):
@@ -35,11 +32,11 @@ class Window(tk.Tk):
         i.set("食材類型")
         ingredient_type = ttk.Menubutton(self.search_box,bootstyle=(OUTLINE,DANGER))
         ingredient_type["textvariable"] = i
-        ingredient_type_values = ('01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
+        self.ingredient_type_values = ('01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
                                   '06 火辣香草','07 豆製肉','08 哞哞鮮奶','09 甜甜蜜','10 純粹油',
                                   '11 暖暖薑','12 好眠番茄','13 放鬆可可','14 美味尾巴','15 萌綠大豆')
         ingredient_type_menu = tk.Menu(ingredient_type, tearoff=0)
-        for ingredient in ingredient_type_values:
+        for ingredient in self.ingredient_type_values:
             ingredient_type_menu.add_command(
                 label=ingredient, 
                 command=lambda val=ingredient: i.set(val),
@@ -53,12 +50,12 @@ class Window(tk.Tk):
         f.set("樹果類型")
         fruit_type = ttk.Menubutton(self.search_box,bootstyle=DANGER)
         fruit_type["textvariable"] = f
-        fruit_type_values = ('01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
+        self.fruit_type_values = ('01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
                              '06 莓莓果','07 櫻子果','08 零餘果','09 勿花果','10 椰木果',
                              '11 芒芒果','12 木子果','13 文柚果','14 墨莓果','15 番荔果',
                              '16 異奇果','17 靛莓果','18 桃桃果')
         fruit_type_menu = tk.Menu(fruit_type, tearoff=0)
-        for fruit in fruit_type_values:
+        for fruit in self.fruit_type_values:
             fruit_type_menu.add_command(
                 label=fruit, 
                 command=lambda val=fruit: f.set(val),
@@ -66,11 +63,10 @@ class Window(tk.Tk):
             )
         fruit_type["menu"] = fruit_type_menu
         fruit_type.pack(padx=10,pady=10, side=tk.RIGHT)
-
         #tree view-----------------------------------------------------
         self.treeview=tk.Frame(self)
         self.pokemon_data=PokemonTreeView(self.treeview,show="headings",
-        columns=('name','level','sp'),height=20)
+        columns=('name','level','sp','help_fruit','help_ingredient_1'),height=20)
         self.pokemon_data.pack(side=LEFT,padx=10,pady=10)
         # 捲動軸
         scroll=ttk.Scrollbar(self.treeview,orient="vertical",command=self.pokemon_data.yview,bootstyle=PRIMARY)
@@ -78,29 +74,32 @@ class Window(tk.Tk):
         self.pokemon_data.configure(yscrollcommand=scroll.set)
         self.treeview.pack(pady=(0,30),padx=20,expand=True,fill="x")
         #圓圈圈-----------------------------------------------------
-        meter=ttk.Meter(
-            metersize=180,
+        self.meter=ttk.Meter(
+            metersize=200,
             padding=5,
-            amountused=25,
-            metertype="semi",
-            subtext="miles per hour",
-            interactive=True,
+            amountused=0,
+            metertype="full",
+            subtext="SP值",
+            interactive=FALSE
         )
-        meter.place(x=365,y=220)
+        self.meter.place(x=340,y=220)
+        # 定义一个函数来更新Meter的数值
+        def update_meter(*args):
+            selected_item = self.pokemon_data.selection()
+            if selected_item:
+                sp_value = self.pokemon_data.item(selected_item)['values'][2]  # 假设SP值在第三列（索引为2）
+                self.meter["amountused"] = int(sp_value)  # 更新Meter的数值
+
+            # 绑定treeview的<<TreeviewSelect>>事件到更新函数
+            self.pokemon_data.bind("<<TreeviewSelect>>", update_meter)
+
 
     # 把search_name引入treeview
     def get_search_name(self, event=None):
         text = self.search_name.get().lower()
-        children = self.pokemon_data.get_children()
-        ingredient = NewPokemon.help_fruit.get()
-        for child in children:
-            item = self.pokemon_data.item(child)
-            name = item['values'][0].lower()
-            ingredient_type = item['values'][6].lower() if len(item['values']) > 1 else ""
-
-            if text.lower() not in name or (ingredient != "食材類型" and ingredient not in ingredient_type):
-                self.pokemon_data.delete(child)
-
+        ingredient = self.ingredient_type_values.get().split()[1]  # 获取选择的食材
+        fruit = self.fruit_type_values.get().split()[1]  # 获取选择的樹果類型
+        PokemonTreeView.search_by_name(text, ingredient, fruit)
 
     # 打開NewPokemon視窗
     def open_NewPokemon(self):
@@ -108,6 +107,8 @@ class Window(tk.Tk):
         open_window.title("新增神奇寶貝")
         open_window.resizable(width=False,height=False)
         open_window.mainloop()
+
+    
 
 # 新增神奇寶貝介面
 class NewPokemon(tk.Toplevel):
@@ -583,22 +584,26 @@ class PokemonTreeView(ttk.Treeview):
     def __init__(self,parent,**kwargs):
         super().__init__(parent,**kwargs)
         self.parent=parent
+        self.conn=sqlite3.connect("pokemon_database.db")
         # 欄位名稱
         self.heading('name',text='名稱')
         self.heading('level',text='等級')
         self.heading('sp',text='sp值')
+        self.heading('help_fruit',text="樹果類型")
+        self.heading('help_ingredient_1',text="食材類型")
         # 欄寬
-        self.column('name',width=100)
-        self.column('level',width=100)
-        self.column('sp',width=100)
+        self.column('name',width=60)
+        self.column('level',width=30)
+        self.column('sp',width=40)
+        self.column('help_fruit',width=70)
+        self.column('help_ingredient_1',width=70)
 
         self.load_data()
     
     def load_data(self):
-        conn=sqlite3.connect("pokemon_database.db")
-        cursor=conn.cursor()
+        cursor=self.conn.cursor()
         cursor.execute('''
-                        SELECT name,level,sp
+                        SELECT name,level,sp,help_fruit,help_ingredient_1
                        FROM pokemon
                        ''')
         rows=cursor.fetchall()
@@ -608,15 +613,26 @@ class PokemonTreeView(ttk.Treeview):
 
         for row in rows:
             self.insert('',"end",values=row)
+    
+    def search_by_name(self, text, ingredient, fruit):
+        children = self.get_children()
 
-    def search_by_name(self, name):
-        matching_items = []
-        items = self.get_children()
-        for item in items:
-            values = self.item(item, 'values')
-            if values[2] == name:
-                matching_items.append(values)
-        return matching_items
+        for child in children:
+            item = self.item(child)
+            name = item['values'][0].lower()
+            help_fruit = item['values'][3].lower()
+            help_ingredient = item['values'][4].lower() if len(item['values']) > 4 else ""
+
+            # 根据条件筛选数据
+            if (text in name) and (ingredient in help_ingredient) and (fruit in help_fruit):
+                self.item(child, open=True)
+            else:
+                self.item(child, open=False)
+
+        # 如果搜索文本和果实类型都为空，显示全部数据
+        if text == "" and fruit == "樹果類型" and ingredient == "食材類型":
+            for child in children:
+                self.item(child, open=True)
 
 if __name__ == "__main__":
     window=Window()
