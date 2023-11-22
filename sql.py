@@ -2,6 +2,7 @@ import sqlite3
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import pandas
 
 # 主介面
 class Window(tk.Tk):
@@ -28,10 +29,10 @@ class Window(tk.Tk):
         self.search_name.pack(side="left",pady=10)
 
         # 食材
-        i = tk.StringVar()
-        i.set("食材類型")
+        self.i = tk.StringVar()
+        self.i.set("食材類型")
         ingredient_type = ttk.Menubutton(self.search_box,bootstyle=(OUTLINE,DANGER))
-        ingredient_type["textvariable"] = i
+        ingredient_type["textvariable"] = self.i
         self.ingredient_type_values = ('01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
                                   '06 火辣香草','07 豆製肉','08 哞哞鮮奶','09 甜甜蜜','10 純粹油',
                                   '11 暖暖薑','12 好眠番茄','13 放鬆可可','14 美味尾巴','15 萌綠大豆')
@@ -39,17 +40,17 @@ class Window(tk.Tk):
         for ingredient in self.ingredient_type_values:
             ingredient_type_menu.add_command(
                 label=ingredient, 
-                command=lambda val=ingredient: i.set(val),
+                command=lambda val=ingredient: self.i.set(val),
                 activebackground="pink"
             )
         ingredient_type["menu"] = ingredient_type_menu
         ingredient_type.pack(padx=10,pady=10, side=tk.RIGHT)
 
         # 樹果類型
-        f = tk.StringVar()
-        f.set("樹果類型")
+        self.f = tk.StringVar()
+        self.f.set("樹果類型")
         fruit_type = ttk.Menubutton(self.search_box,bootstyle=DANGER)
-        fruit_type["textvariable"] = f
+        fruit_type["textvariable"] = self.f
         self.fruit_type_values = ('01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
                              '06 莓莓果','07 櫻子果','08 零餘果','09 勿花果','10 椰木果',
                              '11 芒芒果','12 木子果','13 文柚果','14 墨莓果','15 番荔果',
@@ -58,7 +59,7 @@ class Window(tk.Tk):
         for fruit in self.fruit_type_values:
             fruit_type_menu.add_command(
                 label=fruit, 
-                command=lambda val=fruit: f.set(val),
+                command=lambda val=fruit: self.f.set(val),
                 activebackground="pink"
             )
         fruit_type["menu"] = fruit_type_menu
@@ -82,7 +83,7 @@ class Window(tk.Tk):
             subtext="SP值",
             interactive=FALSE
         )
-        self.meter.place(x=340,y=220)
+        self.meter.place(x=350,y=220)
         # 定义一个函数来更新Meter的数值
         def update_meter(*args):
             selected_item = self.pokemon_data.selection()
@@ -97,9 +98,19 @@ class Window(tk.Tk):
     # 把search_name引入treeview
     def get_search_name(self, event=None):
         text = self.search_name.get().lower()
-        ingredient = self.ingredient_type_values.get().split()[1]  # 获取选择的食材
-        fruit = self.fruit_type_values.get().split()[1]  # 获取选择的樹果類型
-        PokemonTreeView.search_by_name(text, ingredient, fruit)
+        ingredient = self.i.get()
+        fruit = self.f.get()
+
+        if text:
+            sql = f"SELECT * FROM pokemon WHERE name = '{text}'"
+        if fruit:
+            sql = f"SELECT * FROM pokemon WHERE help_fruit = '{fruit}'"
+        if ingredient:
+            sql = f"SELECT * FROM pokemon WHERE help_ingredient_1 = '{ingredient}'"
+
+            data = pandas.read_sql_query(sql, NewPokemon.save_to_database.conn)
+            self.display_data(data)
+
 
     # 打開NewPokemon視窗
     def open_NewPokemon(self):
@@ -277,8 +288,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_main.set("主技能")
         skill_main = ttk.Menubutton(skill_main_box,bootstyle=(OUTLINE,WARNING))
         skill_main["textvariable"] = self.skill_main
-        skill_main_values = ('食材獲取','持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_main_values = ('能量填充','活力填充','活力療癒','活力全體療癒','夢之碎片獲取',
+                             '食材獲取', '幫手支援','料理強化', '揮指')
         skill_main_menu = tk.Menu(skill_main, tearoff=0)
         for skill in skill_main_values:
             skill_main_menu.add_command(
@@ -340,8 +351,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_second_1.set("副技能1")
         skill_second_1 = ttk.Menubutton(skill_second_box,bootstyle=WARNING)
         skill_second_1["textvariable"] = self.skill_second_1
-        skill_second_1_values = ('持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_second_1_values = ('樹果數量','幫手獎勵','幫忙速度','睡眠EXP獎勵','研究EXP獎勵',
+                                 '夢之碎片獎勵','活力恢復獎勵','食材機率提升','持有上限提升','技能機率提升','技能等級提升')
         skill_second_1_menu = tk.Menu(skill_second_1, tearoff=0)
         for skill in skill_second_1_values:
             skill_second_1_menu.add_command(
@@ -359,8 +370,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_second_2.set("副技能2")
         skill_second_2 = ttk.Menubutton(skill_second_box,bootstyle=WARNING)
         skill_second_2["textvariable"] = self.skill_second_2
-        skill_second_2_values = ('持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_second_2_values = ('樹果數量','幫手獎勵','幫忙速度','睡眠EXP獎勵','研究EXP獎勵',
+                                 '夢之碎片獎勵','活力恢復獎勵','食材機率提升','持有上限提升','技能機率提升','技能等級提升')
         skill_second_2_menu = tk.Menu(skill_second_2, tearoff=0)
         for skill in skill_second_2_values:
             skill_second_2_menu.add_command(
@@ -378,8 +389,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_second_3.set("副技能3")
         skill_second_3 = ttk.Menubutton(skill_second_box,bootstyle=WARNING)
         skill_second_3["textvariable"] = self.skill_second_3
-        skill_second_3_values = ('持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_second_3_values = ('樹果數量','幫手獎勵','幫忙速度','睡眠EXP獎勵','研究EXP獎勵',
+                                 '夢之碎片獎勵','活力恢復獎勵','食材機率提升','持有上限提升','技能機率提升','技能等級提升')
         skill_second_3_menu = tk.Menu(skill_second_3, tearoff=0)
         for skill in skill_second_3_values:
             skill_second_3_menu.add_command(
@@ -397,8 +408,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_second_4.set("副技能4")
         skill_second_4 = ttk.Menubutton(skill_second_box,bootstyle=WARNING)
         skill_second_4["textvariable"] = self.skill_second_4
-        skill_second_4_values = ('持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_second_4_values = ('樹果數量','幫手獎勵','幫忙速度','睡眠EXP獎勵','研究EXP獎勵',
+                                 '夢之碎片獎勵','活力恢復獎勵','食材機率提升','持有上限提升','技能機率提升','技能等級提升')
         skill_second_4_menu = tk.Menu(skill_second_4, tearoff=0)
         for skill in skill_second_4_values:
             skill_second_4_menu.add_command(
@@ -416,8 +427,8 @@ class NewPokemon(tk.Toplevel):
         self.skill_second_5.set("副技能5")
         skill_second_5 = ttk.Menubutton(skill_second_box,bootstyle=WARNING)
         skill_second_5["textvariable"] = self.skill_second_5
-        skill_second_5_values = ('持有上限提升', '幫忙速度', '食物機率提升', '技能機率提升', '技能等級提升',
-            '樹果數量', '幫手獎勵', '活力恢復獎勵', '夢之碎片獎勵', '研究EXP獎勵', '睡眠EXP獎勵')
+        skill_second_5_values = ('樹果數量','幫手獎勵','幫忙速度','睡眠EXP獎勵','研究EXP獎勵',
+                                 '夢之碎片獎勵','活力恢復獎勵','食材機率提升','持有上限提升','技能機率提升','技能等級提升')
         skill_second_5_menu = tk.Menu(skill_second_5, tearoff=0)
         for skill in skill_second_5_values:
             skill_second_5_menu.add_command(
@@ -593,10 +604,10 @@ class PokemonTreeView(ttk.Treeview):
         self.heading('help_ingredient_1',text="食材類型")
         # 欄寬
         self.column('name',width=60)
-        self.column('level',width=30)
+        self.column('level',width=40)
         self.column('sp',width=40)
         self.column('help_fruit',width=70)
-        self.column('help_ingredient_1',width=70)
+        self.column('help_ingredient_1',width=80)
 
         self.load_data()
     
@@ -614,26 +625,6 @@ class PokemonTreeView(ttk.Treeview):
         for row in rows:
             self.insert('',"end",values=row)
     
-    def search_by_name(self, text, ingredient, fruit):
-        children = self.get_children()
-
-        for child in children:
-            item = self.item(child)
-            name = item['values'][0].lower()
-            help_fruit = item['values'][3].lower()
-            help_ingredient = item['values'][4].lower() if len(item['values']) > 4 else ""
-
-            # 根据条件筛选数据
-            if (text in name) and (ingredient in help_ingredient) and (fruit in help_fruit):
-                self.item(child, open=True)
-            else:
-                self.item(child, open=False)
-
-        # 如果搜索文本和果实类型都为空，显示全部数据
-        if text == "" and fruit == "樹果類型" and ingredient == "食材類型":
-            for child in children:
-                self.item(child, open=True)
-
 if __name__ == "__main__":
     window=Window()
     window.title("Pokemon Sleep SQL")
