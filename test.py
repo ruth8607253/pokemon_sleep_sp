@@ -1,18 +1,28 @@
-children = self.get_children()
+from PIL import Image, ImageTk
 
-        for child in children:
-            item = self.item(child)
-            name = item['values'][0].lower()
-            help_fruit = item['values'][3].lower()
-            help_ingredient = item['values'][4].lower() if len(item['values']) > 4 else ""
+class NewPokemon(tk.Toplevel):
+    # ... (其他部分保持不变)
 
-            # 根据条件筛选数据
-            if (text in name) or (ingredient in help_ingredient) or (fruit in help_fruit):
-                self.item(child, open=True)
-            else:
-                self.item(child, open=False)
+    def show_image(self, img_path):
+        try:
+            img = Image.open(img_path)
+            # 调整图像大小为原始大小的50%
+            width, height = img.size
+            new_width = int(width * 0.5)
+            new_height = int(height * 0.5)
+            img = img.resize((new_width, new_height), Image.ANTIALIAS)
 
-        # 如果搜索文本和果实类型都为空，显示全部数据
-        if text == "" and fruit == "樹果類型" and ingredient == "食材類型":
-            for child in children:
-                self.item(child, open=True)
+            tk_img = ImageTk.PhotoImage(img)
+
+            x_pos = self.winfo_x() + self.winfo_width() + 10
+            y_pos = self.winfo_y() + 200
+
+            self.jpg = tk.Toplevel()
+            self.jpg.title("樹果類型")
+            self.jpg.geometry(f'+{x_pos}+{y_pos}')
+
+            label = tk.Label(self.jpg, image=tk_img)
+            label.image = tk_img
+            label.pack()
+        except FileNotFoundError:
+            print("找不到图像")

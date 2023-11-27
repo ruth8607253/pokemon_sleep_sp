@@ -2,12 +2,15 @@ import sqlite3
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-import pandas
+import pandas as pd
+import tkinter as tk
+from PIL import Image, ImageTk
 
 # 主介面
 class Window(tk.Tk):
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
+        self.conn=sqlite3.connect("pokemon_database.db")
 
         # 標題----------------------------------------------
         topFrame=tk.Frame(self,relief=tk.GROOVE)
@@ -33,7 +36,7 @@ class Window(tk.Tk):
         self.i.set("食材類型")
         ingredient_type = ttk.Menubutton(self.search_box,bootstyle=(OUTLINE,DANGER))
         ingredient_type["textvariable"] = self.i
-        self.ingredient_type_values = ('01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
+        self.ingredient_type_values = ("食材類型",'01 粗枝大蔥','02 品鮮蘑菇','03 特選蛋','04 窩心洋芋','05 特選蘋果',
                                   '06 火辣香草','07 豆製肉','08 哞哞鮮奶','09 甜甜蜜','10 純粹油',
                                   '11 暖暖薑','12 好眠番茄','13 放鬆可可','14 美味尾巴','15 萌綠大豆')
         ingredient_type_menu = tk.Menu(ingredient_type, tearoff=0)
@@ -44,6 +47,7 @@ class Window(tk.Tk):
                 activebackground="pink"
             )
         ingredient_type["menu"] = ingredient_type_menu
+        self.i.trace('w', self.get_search_name)
         ingredient_type.pack(padx=10,pady=10, side=tk.RIGHT)
 
         # 樹果類型
@@ -51,7 +55,7 @@ class Window(tk.Tk):
         self.f.set("樹果類型")
         fruit_type = ttk.Menubutton(self.search_box,bootstyle=DANGER)
         fruit_type["textvariable"] = self.f
-        self.fruit_type_values = ('01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
+        self.fruit_type_values = ('樹果類型','01 柿仔果', '02 蘋野果','03 橙橙果','04 萄葡果','05 金枕果',
                              '06 莓莓果','07 櫻子果','08 零餘果','09 勿花果','10 椰木果',
                              '11 芒芒果','12 木子果','13 文柚果','14 墨莓果','15 番荔果',
                              '16 異奇果','17 靛莓果','18 桃桃果')
@@ -63,54 +67,121 @@ class Window(tk.Tk):
                 activebackground="pink"
             )
         fruit_type["menu"] = fruit_type_menu
+        self.f.trace('w', self.get_search_name)
         fruit_type.pack(padx=10,pady=10, side=tk.RIGHT)
+
         #tree view-----------------------------------------------------
         self.treeview=tk.Frame(self)
         self.pokemon_data=PokemonTreeView(self.treeview,show="headings",
-        columns=('name','level','sp','help_fruit','help_ingredient_1'),height=20)
+        columns=('id','name','help_fruit','help_ingredient_1'),height=20)
         self.pokemon_data.pack(side=LEFT,padx=10,pady=10)
+
         # 捲動軸
         scroll=ttk.Scrollbar(self.treeview,orient="vertical",command=self.pokemon_data.yview,bootstyle=PRIMARY)
         scroll.pack(side=LEFT,fill="y")
         self.pokemon_data.configure(yscrollcommand=scroll.set)
         self.treeview.pack(pady=(0,30),padx=20,expand=True,fill="x")
-        #圓圈圈-----------------------------------------------------
+
+        # 放大顯示名稱----------------------------------------------
+        self.display_name=ttk.Label(font=("arial",20,"bold"),bootstyle=PRIMARY)
+        self.display_name.place(x=310,y=160)
+
+        # 圓圈圈-----------------------------------------------------
         self.meter=ttk.Meter(
             metersize=200,
             padding=5,
             amountused=0,
+            amounttotal=2000,
             metertype="full",
             subtext="SP值",
-            interactive=FALSE
+            interactive=FALSE,
+            stripethickness=2
         )
-        self.meter.place(x=350,y=220)
-        # 定义一个函数来更新Meter的数值
-        def update_meter(*args):
-            selected_item = self.pokemon_data.selection()
-            if selected_item:
-                sp_value = self.pokemon_data.item(selected_item)['values'][2]  # 假设SP值在第三列（索引为2）
-                self.meter["amountused"] = int(sp_value)  # 更新Meter的数值
+        self.meter.place(x=325,y=220)
 
-            # 绑定treeview的<<TreeviewSelect>>事件到更新函数
-            self.pokemon_data.bind("<<TreeviewSelect>>", update_meter)
+        # 能力詳情--------------------------------------------------
+        self.display_power_up=ttk.Label(font=("arial",12,"bold"),bootstyle=PRIMARY)
+        self.display_power_up.place(x=310,y=435)
 
+        self.display_power_down=ttk.Label(font=("arial",12,"bold"),bootstyle=PRIMARY)
+        self.display_power_down.place(x=310,y=465)
 
+        # 绑定treeview的<<TreeviewSelect>>事件到更新函數
+        self.pokemon_data.bind("<<TreeviewSelect>>", self.update_right)
+
+    # 更新數值
+    def update_right(self, *args):
+        selected_item = self.pokemon_data.selection()
+        id = self.pokemon_data.item(selected_item)['values'][0]
+        sp_value, power_up, power_down, img_num = self.get_pokemon_data(id)
+
+        # 更新 meter
+        self.meter.configure(amountused=sp_value)
+
+        # 更新 display_name
+        name = self.pokemon_data.item(selected_item)['values'][1]
+        self.display_name.configure(text=f"{name}")
+
+        # 更新 display_power_up
+        self.display_power_up.configure(text=f"{power_up}  ▲ ▲")
+
+        # 更新 display_power_down
+        self.display_power_down.configure(text=f"{power_down}  ▼ ▼")
+
+        # 更新圖片
+        if hasattr(self, 'jpg') and isinstance(self.jpg, tk.Toplevel):
+            self.jpg.destroy()
+        self.show_image(img_num)
+
+    # 從database裡獲取資料 for更新數值
+    def get_pokemon_data(self, id):
+        cursor = self.conn.cursor()
+        cursor.execute(f"SELECT sp, power_up, power_down,img_num FROM pokemon WHERE id={id}")
+        result = cursor.fetchone()
+        if result:
+            sp_value, power_up, power_down, img_num = result
+            return sp_value, power_up, power_down, img_num
+    
+    # 顯示神奇寶貝圖片
+    def show_image(self, img_num):
+        img_path = f'display_data/{img_num}.jpg'
+
+        try:
+            img = Image.open(img_path)
+            tk_img = ImageTk.PhotoImage(img)
+
+            x_pos = self.winfo_x() + self.winfo_width()+10
+            y_pos = self.winfo_y()+200
+
+            self.jpg = tk.Toplevel()
+            self.jpg.title(f"神奇寶貝-編號{img_num}")
+            self.jpg.geometry(f'+{x_pos}+{y_pos}')
+
+            label = tk.Label(self.jpg, image=tk_img)
+            label.image = tk_img 
+            label.pack()
+        except FileNotFoundError:
+            print(f"Image {img_num}.jpg not found")
+    
     # 把search_name引入treeview
-    def get_search_name(self, event=None):
+    def get_search_name(self, *args):
         text = self.search_name.get().lower()
-        ingredient = self.i.get()
         fruit = self.f.get()
+        ingredient = self.i.get()
 
+        conditions = []
         if text:
-            sql = f"SELECT * FROM pokemon WHERE name = '{text}'"
-        if fruit:
-            sql = f"SELECT * FROM pokemon WHERE help_fruit = '{fruit}'"
-        if ingredient:
-            sql = f"SELECT * FROM pokemon WHERE help_ingredient_1 = '{ingredient}'"
+            conditions.append(f"SELECT * FROM pokemon WHERE name LIKE '%{text}%'")
+        if fruit and fruit != '樹果類型':
+            conditions.append(f" SELECT * FROM pokemon WHERE help_fruit = '{fruit}'")
+        if ingredient and ingredient != '食材類型':
+            conditions.append(f" SELECT * FROM pokemon WHERE help_ingredient_1 = '{ingredient}'")
 
-            data = pandas.read_sql_query(sql, NewPokemon.save_to_database.conn)
-            self.display_data(data)
-
+        where_clause = " ".join(conditions)
+        if where_clause:
+            sql=where_clause
+            self.data = pd.read_sql_query(sql, self.conn)
+            self.pokemon_data.display_data(self.data)
 
     # 打開NewPokemon視窗
     def open_NewPokemon(self):
@@ -118,8 +189,6 @@ class Window(tk.Tk):
         open_window.title("新增神奇寶貝")
         open_window.resizable(width=False,height=False)
         open_window.mainloop()
-
-    
 
 # 新增神奇寶貝介面
 class NewPokemon(tk.Toplevel):
@@ -172,7 +241,6 @@ class NewPokemon(tk.Toplevel):
         self.level= ttk.Entry(search_box,bootstyle=WARNING,width=5)
         self.level.pack(side="left",pady=10)
 
-        
         # 幫忙間隔
         tk.Label(search_box, text="幫忙間隔：").pack(side="left",padx=(50,0),pady=10)
         self.help_time = ttk.Entry(search_box, style="WARNING", width=10)
@@ -207,9 +275,9 @@ class NewPokemon(tk.Toplevel):
         help_fruit.pack(padx=10,pady=10, side=tk.LEFT)
 
         # 樹果加成
-        tk.Label(help_box, text="樹果加成：").pack(side=LEFT)
-        self.help_fruit_num= ttk.Entry(help_box,bootstyle=WARNING,width=5)
-        self.help_fruit_num.pack(side="left",pady=10)
+        self.image_label = tk.Label(help_box, text="樹果加成：")
+        self.image_label.pack(side=tk.LEFT)
+        self.image_label.bind("<Button-1>", self.show_fruit_image)
 
         # 食材1
         self.help_ingredient_1 = tk.StringVar()
@@ -590,31 +658,59 @@ class NewPokemon(tk.Toplevel):
         conn.commit()
         conn.close()
         self.destroy()
+    
+    def show_fruit_image(self, event):
+        img_path = '对应的图像路径'
+        self.show_image(img_path)
 
+    # 顯示樹果圖片
+    def show_image(self, img_num):
+        try:
+            img = Image.open('fruit.jpg')
+            width, height = img.size
+            new_width = int(width * 0.4)
+            new_height = int(height * 0.4)
+            img = img.resize((new_width, new_height))
+            tk_img = ImageTk.PhotoImage(img)
+
+            x_pos = self.winfo_x() + self.winfo_width() + 10
+            y_pos = self.winfo_y()-50
+
+            self.jpg = tk.Toplevel()
+            self.jpg.title("樹果類型")
+            self.jpg.geometry(f'+{x_pos}+{y_pos}')
+
+            label = tk.Label(self.jpg, image=tk_img)
+            label.image = tk_img
+            label.pack()
+        except FileNotFoundError:
+            print("找不到图像")
+
+# 主介面的Tree View
 class PokemonTreeView(ttk.Treeview):
     def __init__(self,parent,**kwargs):
         super().__init__(parent,**kwargs)
         self.parent=parent
         self.conn=sqlite3.connect("pokemon_database.db")
+        
         # 欄位名稱
+        self.heading('id',text="id")
         self.heading('name',text='名稱')
-        self.heading('level',text='等級')
-        self.heading('sp',text='sp值')
         self.heading('help_fruit',text="樹果類型")
         self.heading('help_ingredient_1',text="食材類型")
         # 欄寬
+        self.column('id',width=25)
         self.column('name',width=60)
-        self.column('level',width=40)
-        self.column('sp',width=40)
         self.column('help_fruit',width=70)
         self.column('help_ingredient_1',width=80)
 
         self.load_data()
     
+    # 引入datbase資料
     def load_data(self):
         cursor=self.conn.cursor()
         cursor.execute('''
-                        SELECT name,level,sp,help_fruit,help_ingredient_1
+                        SELECT id,name,help_fruit,help_ingredient_1
                        FROM pokemon
                        ''')
         rows=cursor.fetchall()
@@ -625,6 +721,28 @@ class PokemonTreeView(ttk.Treeview):
         for row in rows:
             self.insert('',"end",values=row)
     
+    # 搜尋後的tree view介面
+    def display_data(self, data):
+        if not data.empty:
+
+            self.delete(*self.get_children())
+            # 欄位名稱
+            self.heading('id',text="id")
+            self.heading('name',text='名稱')
+            self.heading('help_fruit',text="樹果類型")
+            self.heading('help_ingredient_1',text="食材類型")
+            # 欄寬
+            self.column('id',width=25)
+            self.column('name',width=60)
+            self.column('help_fruit',width=70)
+            self.column('help_ingredient_1',width=80)
+            
+            column=['id','name','help_fruit','help_ingredient_1']
+
+            for _,row in data.iterrows():
+                    values = [row[col] for col in column]
+                    self.insert("", "end", values=values)
+
 if __name__ == "__main__":
     window=Window()
     window.title("Pokemon Sleep SQL")
