@@ -2,3 +2,5 @@ ttkbootstrap
 requests
 selenium
 pandas
+scikit-learn
+matplotlib

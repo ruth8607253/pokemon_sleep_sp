@@ -1,0 +1,160 @@
+@charset "utf-8";
+
+*{
+	padding:0;
+	margin:0;
+	font-family: Arial, Helvetica,"微軟正黑體", sans-serif;
+}
+
+body {
+	padding-top:50px;
+	background-image:linear-gradient(135deg, #a372c1 0%, #eda1c4 100%);
+}
+
+/*header：logo---------------------------------------------------*/
+header{
+
+}
+header h1{
+	margin: auto;
+}
+/*nav：輪播廣告-----------------------------------------------------*/
+nav{
+
+}
+nav #PIC{
+	width:800px;
+	height:200px;
+	margin:0 auto;
+	overflow:hidden;
+	position:relative;
+	margin-bottom:10px;
+}
+nav #PIC ul{
+	width:8800px;
+	position:absolute;
+}
+nav #PIC li{
+	list-style-type:none;
+	float:left;
+}
+
+nav #ICON{
+	width:800px;
+	margin:0 auto;
+	overflow:hidden;
+}
+nav #ICON ul{}
+nav #ICON li{
+	float:left;
+	display:block;
+	width:18px;
+	height:18px;
+	font-size:10px;
+	background-color:#FFF;
+	margin-right:6px;
+	text-align:center;
+	line-height:18px;
+	list-style-type:none;
+	border:#666 1px solid;
+	border-radius:18px;
+	color:#666;
+	cursor:pointer;
+	}
+	
+nav #ICON li.CC {
+	background-color:#666;
+	color: #FFF;
+}
+/*article：搜尋並顯示神奇寶貝基本資料---------------------------------*/
+// 我想要這塊藍藍的
+article{
+
+}
+
+article h2{
+	width: 500px;
+	height: 50px;
+	line-height: 50px;
+	background-color: white;
+	border-radius: 50% 0 0 50%;
+	text-indent: 2em;
+	color: rgb(172, 172, 172);
+}
+
+/*打到這~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+@font-face {
+	content: search;
+	font-family: 'Material Symbols Outlined';
+}
+
+article h3{
+
+}
+
+article h4{
+
+}
+
+article img{
+
+}
+
+article ul{
+
+}
+
+article li{
+
+}
+/*section：比較神奇寶貝----------------------------------------------*/
+section{
+	
+}
+
+section h1{
+	text-align: center;
+}
+
+section .search{
+	// display: none;
+
+}
+
+section .search h3{
+
+}
+
+section .search img{
+
+}
+
+section .search ul{
+
+}
+
+section .search li{
+
+}
+
+section .vs img{
+
+}
+
+section h2{
+
+} 
+
+section p{
+
+}
+/*footer：底部-----------------------------------------------------*/
+footer{
+	background-color: black;
+	color: white;
+}
+
+footer p{
+	margin: auto;
+	padding: 50px;
+}

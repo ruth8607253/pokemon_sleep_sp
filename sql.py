@@ -666,7 +666,7 @@ class NewPokemon(tk.Toplevel):
     # 顯示樹果圖片
     def show_image(self, img_num):
         try:
-            img = Image.open('fruit.jpg')
+            img = Image.open('display_data/fruit.jpg')
             width, height = img.size
             new_width = int(width * 0.4)
             new_height = int(height * 0.4)

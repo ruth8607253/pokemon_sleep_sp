@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="sh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Sleep - {%block title%}{%endblock%}</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/base.css')}}">
+    <script src="{{url_for('static',filename=js/base.jquery-1.10.2.min.js')}}"></script>
+    <script src="{{url_for('static',filename=js/jquery-ui-1.10.4.custom.min.js')}}"></script>
+    <script src="{{url_for('static',filename=js/myJS.js')}}"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+    <header> <!--logo，考慮一下要不要用立體字-->
+        <h1><a href="{{url_for('pokemon_sleep')}}"><img src="{{url_for('static',filename='img/logo.png')}}"
+                    alt="pokemon_sleep_logo"></a></h1>
+    </header>
+    <nav> <!--輪播廣告-->
+        <div id="PIC">
+            <ul>
+                <li><img src="images/photo1.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo2.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo3.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo4.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo5.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo6.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo7.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo8.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo9.jpg" width="800" height="200" alt="" /></li>
+                <li><img src="images/photo10.jpg" width="800" height="200" alt="" /></li>
+            </ul>
+        </div>
+        <div id="ICON">
+            <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+                <li>7</li>
+                <li>8</li>
+                <li>9</li>
+                <li>10</li>
+            </ul>
+        </div>
+    </nav>
+    <article> <!--搜尋並顯示神奇寶貝基本資料-->
+        <h2>請輸入神奇寶貝名稱</h2>
+        <h3><a href="#"></a></h3>
+        <h4><a href="#">隨機搜尋</a></h4>
+        <img src="" alt="pokemon">
+        <ul>
+            <li>power</li>
+            <li>power</li>
+            <li>power</li>
+            <li>power</li>
+            <li>power</li>
+        </ul>
+    </article>
+    <section> <!--比較神奇寶貝-->
+        <h1><a href="#">神奇寶貝訓練建議</a></h1>
+        <div class="serch">
+            <h3><a href="#">請輸入神奇寶貝</a></h3>
+            <h4><a href="#">請輸入等級</a></h4>
+            <img class="more" src="" alt="其他設定">
+            <!--可能影響sp的其他能力-->
+            <ul>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+            </ul>
+        </div>
+        <div class="serch">
+            <h3><a href="#">請輸入神奇寶貝</a></h3>
+            <h4><a href="#">請輸入等級</a></h4>
+            <img class="more" src="" alt="其他設定">
+            <!--可能影響sp的其他能力-->
+            <ul>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+                <li>power</li>
+            </ul>
+        </div>
+        <img class="vs" src="" alt="">
+        <img class='vs' src="" alt="vs">
+        <img class='vs' src="" alt="">
+        <h2>建議你先訓練<span><!--寶可夢名稱--></span></h2>
+        <p><!--原因--></p>
+    </section>
+    <footer> <!--底部-->
+        <p>ポケモン ゲットだぜ</p>
+        <p>サトシ</p>
+    </footer>
+</body>
+
+</html>
