@@ -278,6 +278,8 @@ class NewPokemon(tk.Toplevel):
         self.image_label = tk.Label(help_box, text="樹果加成：")
         self.image_label.pack(side=tk.LEFT)
         self.image_label.bind("<Button-1>", self.show_fruit_image)
+        self.help_fruit_num_1= ttk.Entry(help_box,bootstyle=WARNING,width=5)
+        self.help_fruit_num_1.pack(side="left",pady=10)
 
         # 食材1
         self.help_ingredient_1 = tk.StringVar()
@@ -562,7 +564,7 @@ class NewPokemon(tk.Toplevel):
         expertise = self.expertise.get()
         level=self.level.get()
         help_fruit=self.help_fruit.get()
-        help_fruit_num=self.help_fruit_num.get()
+        help_fruit_num=self.help_fruit_num_1.get()
         help_ingredient_1=self.help_ingredient_1.get()
         help_ingredient_num_1=self.help_ingredient_num_1.get()
         help_ingredient_2=self.help_ingredient_2.get()

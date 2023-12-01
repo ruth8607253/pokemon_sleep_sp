@@ -1,0 +1,185 @@
+{%extends "base.html" %}
+{%block title%}首頁{%endblock%}
+{%block head%}
+<link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+{%endblock%}
+
+{%block content%}
+<nav> <!--輪播廣告-->
+    <div id="PIC">
+        <ul>
+            <li><img src="{{url_for('static',filename='img/photo1.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo2.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/phot3.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo4.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo5.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo6.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo7.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo8.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo9.jpg')}}" width="800" height="200" alt="" /></li>
+            <li><img src="{{url_for('static',filename='img/photo10.jpg')}}" width="800" height="200" alt="" /></li>
+        </ul>
+    </div>
+    <div id="ICON">
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+            <li>10</li>
+        </ul>
+    </div>
+</nav>
+<article> <!--搜尋並顯示神奇寶貝基本資料-->
+    <div class="search">
+        <h2>請輸入神奇寶貝名稱</h2>
+        <h3><a href="#"></a></h3>
+        <a href="#">
+            <h4>隨機搜尋</h4>
+        </a>
+    </div>
+    <div class="display">
+        <img class="dp" src="{{url_for('static',filename='img/display/699.png')}}" alt="pokemon">
+
+        <ul>
+            <li>專長</li>
+            <li>樹果類型</li>
+            <li>食材類型</li>
+            <li>主技能</li>
+        </ul>
+        <ul>
+            <li><img src="" alt="專長"></li>
+            <li><img src="" alt="樹果類型"></li>
+            <li><img src="" alt="食材類型"></li>
+            <li><img src="" alt="主技能"></li>
+        </ul>
+    </div>
+</article>
+<section> <!--比較神奇寶貝-->
+    <h1>神奇寶貝訓練建議</h1>
+    <h2 class="explain">?</h2>
+    <div class="e">
+        <h2 class="x">x</h2>
+        <p>為更有效率的培養卡比獸，進而接觸到更多的神奇寶貝，我們在此提供了一個簡單預測訓練成效的模擬器。</p>
+        <p>我們的判斷前提如下：</p>
+        <ul>
+            <li>您是一位優秀的神奇寶貝大師，因此您想要將所有的神奇寶貝練到滿等。</li>
+            <li>您是一位希望成為最強神奇寶貝大師的人，您使用此模擬器是為了判斷哪隻寶可夢較適合訓練成材，不會因為可愛而把該神奇寶貝留在身邊。</li>
+        </ul>
+        <p>在上述前提下，我們的評斷標準為：</p>
+        <ul>
+            <li>在不使用種子的情況下，2隻神奇寶貝在使用相同數量糖果時，誰更能</li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div class="search" style="clear: both;">
+        <h3>請輸入神奇寶貝名稱<a href="#"></a></h3>
+        <h5><a href="#"></a></h5>
+        <h4>請輸入等級<a href="#"></a></h4>
+        <h5><a href="#"></a></h5>
+        <a href="#"><h6>進階<br>設定</h6></a>
+        <!--可能影響sp的其他能力-->
+        <div class="more">
+            <h1>加成</h1>
+            <h3>樹果加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>初始食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>Lv.30以上食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>Lv.60以上食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>主技能等級</h3>
+            <h5><a href="#"></a></h5><br>
+            <h1>副技能</h1>
+            <a href="#"><h6>樹果數量</h6></a>
+            <a href="#"><h6>幫手獎勵</h6></a>
+            <a href="#"><h6 class="odd">幫忙速度</h6></a>
+            <a href="#"><h6>睡眠EXP獎勵</h6></a>
+            <a href="#"><h6>研究EXP獎勵</h6></a>
+            <a href="#"><h6 class="odd">夢之碎片獎勵</h6></a>
+            <a href="#"><h6>活力恢復獎勵</h6></a>
+            <a href="#"><h6>食材機率提升</h6></a>
+            <a href="#"><h6 class="odd">持有上限提升</h6></a>
+            <a href="#"><h6>技能機率提升</h6></a>
+            <a href="#"><h6>技能等級提升</h6></a>
+        </div>
+        <img class='vs' src="{{url_for('static',filename='img/display/1.png')}}" alt="pokemon">
+    </div>
+    <div class="search">
+        <h3>請輸入神奇寶貝名稱<a href="#"></a></h3>
+        <h5><a href="#"></a></h5>
+        <h4>請輸入等級<a href="#"></a></h4>
+        <h5><a href="#"></a></h5>
+        <a href="#">
+            <h6>進階<br>設定</h6>
+        </a>
+        <!--可能影響sp的其他能力-->
+        <div class="more">
+            <h1>加成</h1>
+            <h3>樹果加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>初始食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>Lv.30以上食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>Lv.60以上食材加成</h3>
+            <h5><a href="#"></a></h5>
+            <h3>主技能等級</h3>
+            <h5><a href="#"></a></h5><br>
+            <h1>副技能</h1>
+            <a href="#">
+                <h6>樹果數量</h6>
+            </a>
+            <a href="#">
+                <h6>幫手獎勵</h6>
+            </a>
+            <a href="#">
+                <h6 class="odd">幫忙速度</h6>
+            </a>
+            <a href="#">
+                <h6>睡眠EXP獎勵</h6>
+            </a>
+            <a href="#">
+                <h6>研究EXP獎勵</h6>
+            </a>
+            <a href="#">
+                <h6 class="odd">夢之碎片獎勵</h6>
+            </a>
+            <a href="#">
+                <h6>活力恢復獎勵</h6>
+            </a>
+            <a href="#">
+                <h6>食材機率提升</h6>
+            </a>
+            <a href="#">
+                <h6 class="odd">持有上限提升</h6>
+            </a>
+            <a href="#">
+                <h6>技能機率提升</h6>
+            </a>
+            <a href="#">
+                <h6>技能等級提升</h6>
+            </a>
+        </div>
+        <img class='vs' src="{{url_for('static',filename='img/display/699.png')}}" alt="pokemon">
+    </div>
+    <div class="suggest">
+        <h1>建議你先訓練 <span><!--寶可夢名稱-->小火龍</span></h1>
+        <p><!--原因-->
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi optio cum cumque assumenda consequuntur dolorum
+            quas necessitatibus debitis asperiores reiciendis mollitia officia laborum et autem molestiae saepe, facilis
+            nostrum. Ea eum earum, maiores iusto minima voluptas! Dicta repudiandae dolor optio. Nihil ipsa pariatur
+            blanditiis, debitis architecto mollitia odio voluptate vitae similique possimus fugit id expedita molestiae
+            laboriosam itaque, consequuntur fuga beatae minus? Nulla consequatur quam veritatis error similique, laudantium
+            perferendis libero repudiandae ex distinctio totam quas enim doloribus magni qui vitae earum at doloremque sed
+            atque est veniam? Saepe minima magnam ut. Error rerum repellat officia dolores doloribus, eos ut!</p>
+    </div>
+</section>
+{%endblock%}

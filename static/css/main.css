@@ -1,0 +1,335 @@
+/*nav：輪播廣告-----------------------------------------------------*/
+nav {
+    margin: 1%;
+}
+
+nav #PIC {
+    width: 800px;
+    height: 200px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+nav #PIC ul {
+    width: 8800px;
+    position: absolute;
+    display: flex;
+}
+
+nav #PIC li {
+    list-style-type: none;
+    float: left;
+    justify-content: center;
+    align-items: center;
+}
+
+nav #ICON {
+    width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+nav #ICON ul {}
+
+nav #ICON li {
+    float: left;
+    display: block;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    background-color: #FFF;
+    margin-right: 6px;
+    text-align: center;
+    line-height: 18px;
+    list-style-type: none;
+    border: #666 1px solid;
+    border-radius: 18px;
+    color: #666;
+    cursor: pointer;
+}
+
+nav #ICON li.CC {
+    background-color: #666;
+    color: #FFF;
+}
+
+/*article：搜尋並顯示神奇寶貝基本資料---------------------------------*/
+article {
+    border: aqua 1px solid;
+    padding: 3%;
+    border-radius: 5px;
+    margin: 2% 5%;
+}
+
+article a{
+    display: block;
+}
+
+article .search{
+    display: flex;
+    justify-content: center;
+}
+
+article .search h2 {
+    width: 500px;
+    height: 50px;
+    line-height: 50px;
+    background-color: white;
+    border-radius: 25px 0 0 25px;
+    text-indent: 2em;
+    color: rgb(172, 172, 172);
+    float: left;
+    text-indent: 20px;
+}
+
+article .search  h3 ::before{
+    content: 'search';
+    font-family: 'Material Symbols Outlined';
+}
+
+article .search h3 {
+    width: 70px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    border-radius:0 25px 25px 0;
+    text-indent: -7px;
+    float: left;
+    text-align: center;
+    margin:0 5% 0 1%;
+    background-color: aqua;
+}
+
+article .search h4 ::before {
+    content: '\ea11';
+    font-family: 'Material Symbols Outlined';
+}
+
+article .search h4 {
+    float: left;
+    font-size: 1.5em;
+    background-color: aquamarine;
+    width: 180px;
+    height: 50px;
+    border-radius: 25px;
+    line-height: 50px;
+    text-align: center;
+}
+
+article .display {
+    display: none;
+    margin: auto;
+    width: 70%;
+    overflow: hidden;
+    padding-top: 5%;
+}
+
+article .dp {
+    float: left;
+    margin-right: 5%;
+    width: 40%;
+    height: auto;
+}
+
+article ul {
+    float: left;
+    padding: 10% 0 0 10%;
+}
+
+article li {
+    font-size:2em;
+    text-align: justify;
+    padding-bottom: 15%;
+}
+
+/*section：比較神奇寶貝----------------------------------------------*/
+section {
+    border:pink 1px solid ;
+    padding: 3%;
+    border-radius: 5px;
+    margin: 2% 5%;
+    background-image: url();
+    overflow: hidden;
+}
+
+section h1 {
+    text-align: center;
+    margin: auto;
+    font-size: 2em;
+    width: 300px;
+    margin-bottom: 1%;
+}
+
+section h2 {
+    #display: none;
+    text-align: center;
+}
+
+section .explain{
+    position: relative;
+    bottom:30px;
+    left: 61%;
+    font-size: 0.5em;
+    background-color: pink;
+    color: white;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+section .e{
+    display: none;
+    margin-bottom: 2%;
+}
+section .e .x{
+    position: relative;
+    width: 30px;
+    height: 30px;
+    line-height: 20px;
+    border-radius: 15px;
+    top: 0;
+    left: -0.5%;
+    background-color: pink;
+    border: white 3px solid;
+    margin-bottom: 1%;
+}
+
+section .e p{
+    padding-bottom: 1%;
+}
+
+section .e li{
+    text-indent: 2em;
+}
+
+section .search {
+    float: left;
+    width: 550px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin:0 0 2% 4.5%;
+}
+
+section .search h3 {
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    background-color: white;
+    border-radius: 25px 0 0 25px;
+    text-indent: 2em;
+    color: rgb(172, 172, 172);
+    text-indent: 20px;
+    font-size: 1em;
+}
+
+section .search h4 {
+    width: 120px;
+    height: 50px;
+    line-height: 50px;
+    background-color: white;
+    border-radius: 25px 0 0 25px;
+    text-indent: 2em;
+    color: rgb(172, 172, 172);
+    text-indent: 20px;
+    font-size: 1em;
+}
+
+section .search h5 {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 30px;
+    border-radius: 0 25px 25px 0;
+    text-indent: -7px;
+    text-align: center;
+    background-color: pink;
+}
+
+section h5 ::before {
+    content: '\e5c5';
+    font-family: 'Material Symbols Outlined';
+}
+
+section .search h6{
+    font-size: 1em;
+    background-color: pink;
+    width: 80px;
+    height: 50px;
+    border-radius: 25px;
+    padding-top: 7px;
+    text-align: center;
+}
+
+section .search .more{
+    display:none;
+    margin: 2% 0;
+    padding: 2%;
+    background-color: rgba(255, 255, 255, 0.496);
+    border-radius: 25px;
+}
+
+section .search h1 {
+    color: aqua;
+    font-size: 1.5em;
+    font-weight: bolder;
+    text-shadow: #b6b6b6 1px 1px;
+    clear: both;
+    padding: 2% 0;
+}
+
+section .search .more h3{
+    float: left;
+    width: 180px;
+    height: 40px;
+    line-height: 40px;
+    margin: 1% 0;
+}
+
+section .search .more h5{
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    margin: 1%;
+}
+
+section .search .more h5:nth-child(4n+3){
+    margin-right: 9%;
+}
+
+section .search .more h6{
+    float: left;
+    padding-top: 0;
+    width: 150px;
+    height: 40px;
+    line-height: 40px;
+    margin:1% 7% 1% 0;
+}
+
+section .search .more .odd {
+    margin:1% 0;
+}
+
+section .vs{
+    display: none;
+    width: 70%;
+    height: auto;
+}
+
+section .suggest{
+    display: none;
+}
+
+section .suggest p {
+    margin-top: 2%;
+    text-align: justify;
+    text-indent: 2em;
+}
+
+section .suggest span{
+    color: aquamarine;
+}

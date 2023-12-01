@@ -27,7 +27,7 @@
 	$("#PIC").hover(function(){ 
 		clearTimeout(TT);
 	},function(){
-		TT = setTimeout(GOGO, 3000);
+		TT = setTimeout(GOGO, 2000);
 	});
 	
 //===========================================================

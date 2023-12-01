@@ -3,4 +3,5 @@ requests
 selenium
 pandas
 scikit-learn
-matplotlib
+matplotli
+Flask
