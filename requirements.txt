@@ -5,3 +5,5 @@ pandas
 scikit-learn
 matplotli
 Flask
+werkzeug
+numpy

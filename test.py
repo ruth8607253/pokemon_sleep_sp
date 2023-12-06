@@ -1,28 +1,32 @@
-from PIL import Image, ImageTk
+import sqlite3
+import numpy as np
 
-class NewPokemon(tk.Toplevel):
-    # ... (其他部分保持不变)
+class same_pokemon():
+    def __init__(self):
+        self.conn = sqlite3.connect("pokemon_database.db")
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM pokemon')
+        rows = cursor.fetchall()
 
-    def show_image(self, img_path):
-        try:
-            img = Image.open(img_path)
-            # 调整图像大小为原始大小的50%
-            width, height = img.size
-            new_width = int(width * 0.5)
-            new_height = int(height * 0.5)
-            img = img.resize((new_width, new_height), Image.ANTIALIAS)
+        self.data = [np.array([row[i] for i in range(2, 16, 2)]) for row in rows]
 
-            tk_img = ImageTk.PhotoImage(img)
+    def get_data(self):
+        return tuple(self.data)
 
-            x_pos = self.winfo_x() + self.winfo_width() + 10
-            y_pos = self.winfo_y() + 200
+# 創建物件
+pokemon_instance = same_pokemon()
+data = pokemon_instance.get_data()
 
-            self.jpg = tk.Toplevel()
-            self.jpg.title("樹果類型")
-            self.jpg.geometry(f'+{x_pos}+{y_pos}')
+# 將取得的資料分別放入變數中
+name, sp, level, help_fruit_num, help_ingredient_num_1, help_ingredient_num_2, help_ingredient_num_3, help_time, help_max = data
 
-            label = tk.Label(self.jpg, image=tk_img)
-            label.image = tk_img
-            label.pack()
-        except FileNotFoundError:
-            print("找不到图像")
+# 現在每個變數包含了從資料庫中擷取的資料
+print("name:", name)
+print("sp:", sp)
+print("level:", level)
+print("help_fruit_num:", help_fruit_num)
+print("help_ingredient_num_1:", help_ingredient_num_1)
+print("help_ingredient_num_2:", help_ingredient_num_2)
+print("help_ingredient_num_3:", help_ingredient_num_3)
+print("help_time:", help_time)
+print("help_max:", help_max)
