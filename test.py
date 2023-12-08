@@ -1,32 +1,53 @@
 import sqlite3
-import numpy as np
+import pandas as pd
 
-class same_pokemon():
+class SamePokemon():
     def __init__(self):
         self.conn = sqlite3.connect("pokemon_database.db")
-        cursor = self.conn.cursor()
-        cursor.execute('SELECT * FROM pokemon')
-        rows = cursor.fetchall()
+        self.cursor = self.conn.cursor()
+        self.cursor.execute('SELECT * FROM pokemon')
+        self.data = self.cursor.fetchall()
 
-        self.data = [np.array([row[i] for i in range(2, 16, 2)]) for row in rows]
+    def get_data_as_dataframe(self):
+        columns = [
+            "id",
+            "img_num",
+                "name",
+                "sp",
+                "expertise",
+                "level",
+                "help_fruit",
+                "help_fruit_num",
+                "help_ingredient_1",
+                "help_ingredient_num_1",
+                "help_ingredient_2",
+                "help_ingredient_num_2",
+                "help_ingredient_3",
+                "help_ingredient_num_3",
+                "help_time",
+                "help_max",
+                "skill_main",
+                "skill_main_num",
+                "skill_main_level",
+                "skill_second_1",
+                "skill_second_num_1",
+                "skill_second_2",
+                "skill_second_num_2",
+                "skill_second_3",
+                "skill_second_num_3",
+                "skill_second_4",
+                "skill_second_num_4",
+                "skill_second_5",
+                "skill_second_num_5",
+                "power_up",
+                "power_down","備註"
+        ]
 
-    def get_data(self):
-        return tuple(self.data)
+        df = pd.DataFrame(self.data, columns=columns)
+        return df
 
-# 創建物件
-pokemon_instance = same_pokemon()
-data = pokemon_instance.get_data()
+# 創建一個物件
+pokemon_instance = SamePokemon()
 
-# 將取得的資料分別放入變數中
-name, sp, level, help_fruit_num, help_ingredient_num_1, help_ingredient_num_2, help_ingredient_num_3, help_time, help_max = data
-
-# 現在每個變數包含了從資料庫中擷取的資料
-print("name:", name)
-print("sp:", sp)
-print("level:", level)
-print("help_fruit_num:", help_fruit_num)
-print("help_ingredient_num_1:", help_ingredient_num_1)
-print("help_ingredient_num_2:", help_ingredient_num_2)
-print("help_ingredient_num_3:", help_ingredient_num_3)
-print("help_time:", help_time)
-print("help_max:", help_max)
+# 將資料以 DataFrame 格式讀取
+pokemon_data = pokemon_instance.get_data_as_dataframe()
