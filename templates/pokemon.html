@@ -8,16 +8,9 @@
 <nav> <!--輪播廣告-->
     <div id="PIC">
         <ul>
-            <li><img src="{{url_for('static',filename='img/photo1.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo2.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/phot3.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo4.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo5.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo6.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo7.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo8.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo9.jpg')}}" width="800" height="200" alt="" /></li>
-            <li><img src="{{url_for('static',filename='img/photo10.jpg')}}" width="800" height="200" alt="" /></li>
+            {% for _ in range(10) %}
+            <li><img src="{{ url_for('static', filename='img/display/') }}" width="500" height="500" alt=""></li>
+            {% endfor %}
         </ul>
     </div>
     <div id="ICON">
@@ -35,29 +28,28 @@
         </ul>
     </div>
 </nav>
-<article> <!--搜尋並顯示神奇寶貝基本資料-->
+<article>
     <div class="search">
-        <h2>請輸入神奇寶貝名稱</h2>
-        <h3><a href="#"></a></h3>
-        <a href="#">
-            <h4>隨機搜尋</h4>
-        </a>
+        <input type="text" name="search_condition" placeholder="請輸入神奇寶貝名稱或編號">
+        <button type="submit" class="b1"></button>
+        <button type="submit" formaction="/random" class="b2">隨機搜尋</button>
     </div>
     <div class="display">
-        <img class="dp" src="{{url_for('static',filename='img/display/699.png')}}" alt="pokemon">
-
+        {% if search_pokemon%}
+        <img class="dp" src="{{ url_for('static', filename='img/display/' + search_pokemon.img_num + '.png') }}" alt="pokemon">
         <ul>
-            <li>專長</li>
-            <li>樹果類型</li>
-            <li>食材類型</li>
-            <li>主技能</li>
+            <li>{{search_pokemon.img_num}}{{search_pokemon.name}}
+            </li>
+            <li>專長 {{search_pokemon.expertise}}</li>
+            <li>樹果 {{search_pokemon.help_fruit}}<img class="dp" 
+                    src="{{url_for('static',filename='img/fruit/' + search_pokemon.help_fruit + '.png')}}" alt="樹果">
+            </li>
+            <li>食材 {{search_pokemon.help_ingredient_1}}<img
+                    src="{{url_for('static',filename='img/ingredient/' + search_pokemon.help_ingredient_1 + '.png')}}"
+                    alt="食材"></li>
+            <li>主技能 {{search_pokemon.skill_main}}</li>
         </ul>
-        <ul>
-            <li><img src="" alt="專長"></li>
-            <li><img src="" alt="樹果類型"></li>
-            <li><img src="" alt="食材類型"></li>
-            <li><img src="" alt="主技能"></li>
-        </ul>
+        {% endif %}
     </div>
 </article>
 <section> <!--比較神奇寶貝-->

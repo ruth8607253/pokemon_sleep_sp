@@ -72,7 +72,7 @@ article .search{
     justify-content: center;
 }
 
-article .search h2 {
+article .search input {
     width: 500px;
     height: 50px;
     line-height: 50px;
@@ -82,14 +82,16 @@ article .search h2 {
     color: rgb(172, 172, 172);
     float: left;
     text-indent: 20px;
+    border: none;
+    font-size: 1.5em;
 }
 
-article .search  h3 ::before{
+article .search  .b1::before{
     content: 'search';
     font-family: 'Material Symbols Outlined';
 }
 
-article .search h3 {
+article .search .b1 {
     width: 70px;
     height: 50px;
     line-height: 50px;
@@ -100,6 +102,7 @@ article .search h3 {
     text-align: center;
     margin:0 5% 0 1%;
     background-color: aqua;
+    border: none;
 }
 
 article .search h4 ::before {
@@ -107,7 +110,7 @@ article .search h4 ::before {
     font-family: 'Material Symbols Outlined';
 }
 
-article .search h4 {
+article .search .b2 {
     float: left;
     font-size: 1.5em;
     background-color: aquamarine;
@@ -116,10 +119,11 @@ article .search h4 {
     border-radius: 25px;
     line-height: 50px;
     text-align: center;
+    border: none;
 }
 
 article .display {
-    display: none;
+    #display: none;
     margin: auto;
     width: 70%;
     overflow: hidden;
