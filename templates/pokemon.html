@@ -9,7 +9,7 @@
     <div id="PIC">
         <ul>
             {% for _ in range(10) %}
-            <li><img src="{{ url_for('static', filename='img/display/') }}" width="500" height="500" alt=""></li>
+            <li><img src="{{ url_for('static', filename=' img/display/') | random_image  }}" width="500" height="500" alt=""></li>
             {% endfor %}
         </ul>
     </div>
@@ -32,7 +32,7 @@
     <div class="search">
         <input type="text" name="search_condition" placeholder="請輸入神奇寶貝名稱或編號">
         <button type="submit" class="b1"></button>
-        <button type="submit" formaction="/random" class="b2">隨機搜尋</button>
+        <button type="submit" formaction="/r" class="b2">隨機搜尋</button>
     </div>
     <div class="display">
         {% if search_pokemon%}

@@ -6,6 +6,7 @@ import urllib
 import random
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # 禁用瀏覽器緩存
 
 @app.context_processor
 def my_context_processor():
@@ -43,8 +44,8 @@ def index(search_pokemon=None):
             return redirect("/random")
     return render_template("pokemon.html", search_pokemon=search_pokemon)
 
-@app.route("/random", methods=["POST"])
-def random():
+@app.route("/r", methods=["POST"])
+def r():
     conn = sqlite3.connect("../pokemon_database.db")
     cursor = conn.cursor()
 
@@ -54,12 +55,13 @@ def random():
 
     return render_template("pokemon.html", search_pokemon=random_pokemon)
 
+@app.template_filter('random_image')
+def random_image(arg):
+    image_dir = os.path.join(app.static_folder, 'img/display/')
+    images = [os.path.join(image_dir, f) for f in os.listdir(image_dir) if f.endswith(('.jpg', '.jpeg', '.png'))]
+    random_image = random.choice(images)
+    print(random_image)
+    return random_image  
+
 if __name__ == "__main__":
     app.run(debug=True)
-
-@app.template_filter('random_image')
-def random_image():
-    image_dir = os.path.join(app.static_folder, 'img/display')  # Get the path to the image directory
-    images = [os.path.join(image_dir, f) for f in os.listdir(image_dir) if f.endswith(('.png'))]  # Get a list of image files
-    random_image = random.choice(images)  # Choose a random image
-    return random_image  # Return the path to the random image
